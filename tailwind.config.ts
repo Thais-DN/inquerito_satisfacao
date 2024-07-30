@@ -8,6 +8,15 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        signika: ['Signika', 'sans-serif'],
+      },
+      colors: {
+        'azul-escuro': '#363b56',
+        'azul-agua': '#0fa5ab',
+        'azul': '#4e8baa',
+        'lilas': '#d3afe4',
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
@@ -17,4 +26,5 @@ const config: Config = {
   },
   plugins: [],
 };
+
 export default config;
