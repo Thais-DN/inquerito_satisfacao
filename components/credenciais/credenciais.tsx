@@ -13,24 +13,24 @@ function Credenciais({ handleNextStep }: Props) {
       </div>
 
       <div className="text-center mb-24">
-        <h1 className="text-xl text-azul-escuro font-extrabold">Inquérito de satisfação</h1>
+        <h1 className="text-2xl text-azul-escuro font-extrabold">Inquérito de satisfação</h1>
       </div>
 
       <div className="w-full flex flex-col px-4">
-        <label htmlFor="email" className="mb-1 ml-2 text-sm font-bold text-azul-escuro">Insira seu e-mail:</label>
+        <label htmlFor="email" className="mb-1 ml-2 text-md font-bold text-azul-escuro">Insira seu e-mail:</label>
         <input 
           type="email" 
           name="email" 
           id="email" 
           placeholder="exemplo@exemplo.com" 
-          className="w-full max-w-md border border-gray-300 rounded-xl p-2 pl-4 mb-6 bg-white"
+          className="w-full max-w-md border border-gray-300 rounded-xl p-2 pl-4 mb-6 bg-white shado"
         />
       </div>
 
       <div className="flex justify-center">
         <button 
           onClick={handleNextStep} 
-          className="px-14 py-3 mb-24 bg-azul text-white rounded-3xl"
+          className="px-14 py-3 mb-24 text-md bg-azul text-white rounded-3xl shadow-lg"
         >
           Iniciar
         </button>

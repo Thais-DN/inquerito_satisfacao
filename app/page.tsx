@@ -5,6 +5,7 @@ import Admin from "@/components/modulos/admin";
 import Consulta from "@/components/modulos/consulta";
 import Geral from "@/components/modulos/geral";
 import React from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function Home() {
   const [currentStep, setCurrentStep] = React.useState<number>(1)
