@@ -8,7 +8,7 @@ interface Props {
 
 export default function Admin({ handleBeforeStep, handleNextStep }: Props) {
     return (
-        <div className="h-screen w-screen font-signika bg-gradient-to-b from-white to-purple-200 p-6">
+        <div className="h-screen font-signika bg-gradient-to-b from-white to-purple-200 p-6">
             <div className="flex items-center gap-3 mb-12">
                 <img src="logo-coracao.png" alt="logo coração - vitale" width={50} />
                 <h1 className="text-lg font-extrabold text-azul-escuro">Inquérito de satisfação</h1>
