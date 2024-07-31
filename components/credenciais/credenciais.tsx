@@ -36,19 +36,19 @@ function Credenciais({ handleNextStep }: Props) {
         </button>
       </div>
 
-      <div className="flex items-center justify-between mt-10 p-5 bg-azul text-white">
+      <div className="flex items-center justify-between mt-10 p-3 bg-azul text-white mb-3">
         <div className='flex flex-col'>
           <div className="mb-2">
-            <a href="https://vitale.pt" className="hover:underline flex items-center gap-2">
+            <a href="https://vitale.pt" className="hover:underline no-underline flex items-center gap-2 text-white">
             <Globe size={18}/> vitale.pt</a>
           </div>
           <div className="mb-2">
-            <a href="mailto:vitale@vitale.pt" className="hover:underline flex items-center gap-2">
+            <a href="mailto:vitale@vitale.pt" className="hover:underline no-underline flex items-center gap-2 text-white">
               <Mail size={18}/> vitale@vitale.pt</a>
           </div>
-          <div className="mb-2 flex items-center gap-1">
+          <div className="mb-2 flex  gap-1">
             <Phone size={18}/>
-            <p>+351 256 936 200</p>
+            <p className='mb-2'>+351 256 936 200</p>
           </div>
         </div>
         <div className='flex flex-col items-center'>
