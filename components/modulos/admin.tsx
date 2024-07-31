@@ -1,5 +1,5 @@
-import React from 'react';
-import BarraProgresso from '../BarraProgresso';
+import React, { useState } from 'react';
+import ProgressBar from 'react-bootstrap/ProgressBar';
 
 interface Props {
     handleBeforeStep: () => void;
@@ -7,19 +7,52 @@ interface Props {
 }
 
 export default function Admin({ handleBeforeStep, handleNextStep }: Props) {
+    const [responses, setResponses] = useState(Array(questions.length).fill(null));
+
+    const handleEmojiClick = (questionIndex: number, value: number) => {
+        const newResponses = [...responses];
+        newResponses[questionIndex] = value;
+        setResponses(newResponses);
+    };
+
+    const calculateProgress = () => {
+        const answered = responses.filter(response => response !== null).length;
+        return (answered / questions.length) * 100;
+    };
+
     return (
-        <div className="h-screen font-signika bg-gradient-to-b from-white to-purple-200 p-6">
+        <div className="min-h-screen flex flex-col font-signika bg-gradient-to-b from-white to-purple-200 p-6">
             <div className="flex items-center gap-3 mb-12">
                 <img src="logo-coracao.png" alt="logo coração - vitale" width={50} />
                 <h1 className="text-lg font-extrabold text-azul-escuro">Inquérito de satisfação</h1>
             </div>
-            <div className="space-y-6 font-semibold">
-                {questions.map((question, index) => (
+            <div className="flex-grow space-y-6 font-semibold overflow-auto">
+                {questions.slice(0, 9).map((question, index) => (
                     <div key={index} className="space-y-2">
                         <p className="text-azul-escuro">{question.text}</p>
                         <div className="flex justify-center gap-4">
                             {emojis.map((emoji, emojiIndex) => (
-                                <button key={emojiIndex} className="focus:outline-none">
+                                <button 
+                                    key={emojiIndex} 
+                                    className={`focus:outline-none ${responses[index] === emojiIndex + 1 ? 'border border-azul-escuro rounded-full' : ''}`}
+                                    onClick={() => handleEmojiClick(index, emojiIndex + 1)}
+                                >
+                                    <img src={emoji.src} alt={`emoji-${emojiIndex + 1}`} className="w-8 h-8" />
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+                {questions.slice(9).map((question, index) => (
+                    <div key={index + 9} className="space-y-2">
+                        <p className="text-azul-escuro">{question.text}</p>
+                        <div className="flex justify-center gap-4">
+                            {emojis.map((emoji, emojiIndex) => (
+                                <button 
+                                    key={emojiIndex} 
+                                    className={`focus:outline-none ${responses[index + 9] === emojiIndex + 1 ? 'border border-azul-escuro rounded-full' : ''}`}
+                                    onClick={() => handleEmojiClick(index + 9, emojiIndex + 1)}
+                                >
                                     <img src={emoji.src} alt={`emoji-${emojiIndex + 1}`} className="w-8 h-8" />
                                 </button>
                             ))}
@@ -27,14 +60,16 @@ export default function Admin({ handleBeforeStep, handleNextStep }: Props) {
                     </div>
                 ))}
             </div>
-            <div className="flex items-center mt-8 w-full gap-2">
-                <BarraProgresso />
-                <button 
-                    onClick={handleNextStep} 
-                    className="px-6 py-2 bg-azul text-white rounded-full shadow-lg"
-                >
-                    Avançar
-                </button>
+            <div className="w-full fixed bottom-0 left-0 p-2 bg-azul-escuro rounded-t-lg">
+                <div className="flex items-center gap-2">
+                    <BarraProgresso progress={calculateProgress()}  />
+                    <button 
+                        onClick={handleNextStep} 
+                        className="px-6 py-2 bg-azul text-white rounded-full shadow-md"
+                    >
+                        Avançar
+                    </button>
+                </div>
             </div>
         </div>
     );
@@ -62,3 +97,7 @@ const emojis = [
     { src: 'emoji-4.png' },
     { src: 'emoji-5.png' },
 ];
+
+function BarraProgresso({ progress }: { progress: number }) {
+    return <ProgressBar animated now={progress} variant='info' className="w-full bg-azul shadow-md" />;
+}

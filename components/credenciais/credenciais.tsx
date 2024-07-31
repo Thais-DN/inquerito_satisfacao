@@ -8,15 +8,15 @@ interface Props {
 function Credenciais({ handleNextStep }: Props) {
   return (
     <div className="flex flex-col justify-between h-screen w-screen bg-gradient-to-b from-white to-purple-200 font-signika">
-      <div className="flex items-start justify-center pt-12">
+      <div className="flex items-start justify-center pt-7">
         <img src="Logo.png" alt="Logo da Vitale" width={110} />
       </div>
 
-      <div className="text-center mt-10">
+      <div className="text-center mt-7">
         <h1 className="text-2xl text-azul-escuro font-extrabold">Inquérito de satisfação</h1>
       </div>
 
-      <div className="w-full flex flex-col px-4 mt-10">
+      <div className="w-full flex flex-col px-4 mt-7">
         <label htmlFor="email" className="mb-1 ml-2 text-md font-bold text-azul-escuro">Insira seu e-mail:</label>
         <input 
           type="email" 
