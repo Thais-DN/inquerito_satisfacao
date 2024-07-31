@@ -7,16 +7,16 @@ interface Props {
 
 function Credenciais({ handleNextStep }: Props) {
   return (
-    <div className="h-screen flex flex-col justify-between bg-gradient-to-b from-white to-purple-200 font-signika">
+    <div className="flex flex-col justify-between h-screen w-screen bg-gradient-to-b from-white to-purple-200 font-signika">
       <div className="flex items-start justify-center pt-24">
         <img src="Logo.png" alt="Logo da Vitale" width={110} />
       </div>
 
-      <div className="text-center mt-24">
+      <div className="text-center mt-10">
         <h1 className="text-2xl text-azul-escuro font-extrabold">Inquérito de satisfação</h1>
       </div>
 
-      <div className="w-full flex flex-col px-4 mt-24">
+      <div className="w-full flex flex-col px-4 mt-10">
         <label htmlFor="email" className="mb-1 ml-2 text-md font-bold text-azul-escuro">Insira seu e-mail:</label>
         <input 
           type="email" 
@@ -27,7 +27,7 @@ function Credenciais({ handleNextStep }: Props) {
         />
       </div>
 
-      <div className="flex justify-center mt-12">
+      <div className="flex justify-center mt-10">
         <button 
           onClick={handleNextStep} 
           className="px-14 py-3 text-md bg-azul text-white rounded-3xl shadow-lg"
@@ -36,8 +36,8 @@ function Credenciais({ handleNextStep }: Props) {
         </button>
       </div>
 
-      <div className="flex items-center justify-between pt-3 px-3 bg-azul text-white mt-36">
-        <div className='flex flex-col justify-center'>
+      <div className="flex items-center justify-between pt-3 px-3 bg-azul text-white">
+        <div className='flex flex-col'>
           <div className="mb-2">
             <a href="https://vitale.pt" className="hover:underline no-underline flex items-center gap-2 text-white">
             <Globe size={18}/> vitale.pt</a>
