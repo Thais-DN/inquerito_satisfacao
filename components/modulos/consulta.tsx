@@ -1,4 +1,3 @@
-import BarraProgresso from "../BarraProgresso";
 
 interface Props {
     handleBeforeStep: () => void;
@@ -9,7 +8,7 @@ interface Props {
 export default function Consulta({handleBeforeStep, handleNextStep}:Props){
     return (
         <div>
-            <BarraProgresso/>
+            
 
             <div className="flex mt-4">
                 <button onClick={handleBeforeStep} className="mr-2 p-2 bg-gray-200 rounded">Previous</button>
