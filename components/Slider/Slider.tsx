@@ -46,8 +46,9 @@ const CustomizedSlider: React.FC<SliderProps> = ({ defaultValue, onChange }) => 
         className="slider shadow-md"
         style={{
           background: `linear-gradient(to right, #52af77 ${value}%, #ddd ${value}%)`,
-          transition: 'background 0.4s ease-in-out', // Suaviza o movimento do background
-          width: '100%'
+          transition: 'background 10s ease-in-out', // Suaviza o movimento do background
+          width: '100%',
+          height: "25px"
         }}
       />
       <div
@@ -55,12 +56,11 @@ const CustomizedSlider: React.FC<SliderProps> = ({ defaultValue, onChange }) => 
         style={{ left: `${value}%`, transition: 'left 0.4s ease-in-out' }}
       >
         <div className="flex flex-col items-center">
-          
           <img
-            src={emojiMap[value as EmojiMapKey]}  
+            src={emojiMap[value as EmojiMapKey]}
             className="w-10 h-10 md:w-12 md:h-12 shadow-md rounded-full" // Ajuste o tamanho do emoji para caber em diferentes tamanhos de tela
             draggable={false}
-            style={{ transform: 'translateY(0%)', transition: 'transform 0.4s ease-in-out' }}
+            style={{ transform: 'translateY(-10%)', transition: 'transform 0.4s ease-in-out' }}
           />
         </div>
       </div>

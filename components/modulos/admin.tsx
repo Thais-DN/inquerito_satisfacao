@@ -90,13 +90,17 @@ export default function Admin({ handleBeforeStep, handleNextStep }: Props) {
               {emojis.map((emoji, emojiIndex) => (
                 <button
                   key={emojiIndex}
-                  className={`focus:outline-none ${responses[index] === emojiIndex + 1 ? 'border border-azul-escuro rounded-full' : ''}`}
+                  className={`focus:outline-none rounded-full transition-all duration-300 ${
+                    responses[index] === emojiIndex + 1 ? '' : ''
+                  }`}
                   onClick={() => handleEmojiClick(index, emojiIndex + 1)}
                 >
                   <img
                     src={emoji.src}
                     alt={`emoji-${emojiIndex + 1}`}
-                    className={`w-8 h-8 shadow-md rounded-full ${responses[index] !== null && responses[index] !== emojiIndex + 1 ? 'grayscale' : ''}`} // Aplica filtro grayscale aos emojis não selecionados
+                    className={`w-8 h-8 shadow-md rounded-full ${
+                      responses[index] !== null && responses[index] !== emojiIndex + 1 ? 'grayscale' : ''
+                    }`} // Aplica filtro grayscale aos emojis não selecionados
                   />
                 </button>
               ))}
@@ -109,13 +113,17 @@ export default function Admin({ handleBeforeStep, handleNextStep }: Props) {
           <p className="text-azul-escuro">{questions[5].text}</p>
           <div className="flex justify-center gap-4">
             <button
-              className={`px-4 py-2 focus:outline-none shadow-md rounded-md  ${responses[5] === 1 ? 'bg-azul-agua text-white rounded-md' : 'bg-gray-200 text-black'}`}
+              className={`px-4 py-2 focus:outline-none shadow-md rounded-md ${
+                responses[5] === 1 ? 'bg-azul-agua text-white' : 'bg-gray-200 text-black'
+              }`}
               onClick={() => handleYesNoClick(1)}
             >
               Sim
             </button>
             <button
-              className={`px-4 py-2 focus:outline-none shadow-md rounded-md ${responses[5] === 2 ? 'bg-azul-agua text-white rounded-md' : 'bg-gray-200 text-black'}`}
+              className={`px-4 py-2 focus:outline-none shadow-md rounded-md ${
+                responses[5] === 2 ? 'bg-azul-agua text-white' : 'bg-gray-200 text-black'
+              }`}
               onClick={() => handleYesNoClick(2)}
             >
               Não
@@ -150,7 +158,9 @@ export default function Admin({ handleBeforeStep, handleNextStep }: Props) {
           <BarraProgresso progress={calculateProgress()} />
           <button
             onClick={handleNextStep}
-            className={`px-6 py-2 bg-azul text-white rounded-full shadow-md ${!allQuestionsAnswered() ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`px-6 py-2 bg-azul text-white rounded-full shadow-md ${
+              !allQuestionsAnswered() ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
             disabled={!allQuestionsAnswered()}
           >
             Avançar
@@ -183,5 +193,6 @@ const emojis = [
 
 // Componente da barra de progresso
 function BarraProgresso({ progress }: { progress: number }) {
-  return <ProgressBar animated now={progress} variant='info' className="w-full shadow-md" />;
+  return <ProgressBar animated now={progress} variant="info" className="w-full shadow-md" />;
 }
+
