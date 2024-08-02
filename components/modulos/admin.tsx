@@ -10,6 +10,7 @@ interface Props {
 export default function Admin({ handleBeforeStep, handleNextStep }: Props) {
   const [responses, setResponses] = useState<Array<number | null>>(Array(questions.length).fill(null));
   const [comments, setComments] = useState<string[]>(Array(questions.length).fill(''));
+  const [commentError, setCommentError] = useState<string>(''); // Error message state for comment validation
 
   // Manipula a mudança no slider ou nos botões de emoji
   const handleEmojiClick = (questionIndex: number, value: number) => {
@@ -24,11 +25,12 @@ export default function Admin({ handleBeforeStep, handleNextStep }: Props) {
     newResponses[5] = value;
     setResponses(newResponses);
 
-    // Limpa o comentário se "Sim" for selecionado
-    if (value === 1) {
+    // Limpa o comentário se "Não" for selecionado
+    if (value === 2) {
       const newComments = [...comments];
-      newComments[5] = '';
+      newComments[5] = ''; // Limpa o comentário se "Não" for selecionado
       setComments(newComments);
+      setCommentError(''); // Reset comment error
     }
   };
 
@@ -37,21 +39,50 @@ export default function Admin({ handleBeforeStep, handleNextStep }: Props) {
     const newComments = [...comments];
     newComments[5] = e.target.value;
     setComments(newComments);
+
+    // Remove error message if comment is valid
+    if (e.target.value.trim().length >= 15) {
+      setCommentError('');
+    }
+  };
+
+  // Verifica se o comentário tem pelo menos 15 caracteres ao sair do campo
+  const handleCommentBlur = () => {
+    if (comments[5].trim().length < 15 && responses[5] === 1) {
+      setCommentError('O comentário deve ter pelo menos 15 caracteres.');
+    } else {
+      setCommentError('');
+    }
   };
 
   // Calcula o progresso das respostas
   const calculateProgress = () => {
-    const answered = responses.filter(response => response !== null).length;
+    const answered = responses.filter((response, index) => {
+      if (index === 5) {
+        return response !== null && (response === 2 || (response === 1 && comments[5].trim().length >= 15));
+      }
+      return response !== null;
+    }).length;
     return (answered / questions.length) * 100;
   };
 
+  // Verifica se todas as questões foram respondidas
+  const allQuestionsAnswered = () => {
+    return responses.every((response, index) => {
+      if (index === 5) {
+        return response !== null && (response === 2 || (response === 1 && comments[5].trim().length >= 15));
+      }
+      return response !== null;
+    });
+  };
+
   return (
-    <div className="min-h-screen flex flex-col font-signika bg-gradient-to-b from-white to-purple-200 p-6">
-      <div className="flex items-center gap-3 mb-12">
+    <div className="min-h-screen flex flex-col font-signika bg-gradient-to-b from-white to-purple-200 px-2">
+      <div className="flex items-center ml-2 gap-3 mt-4">
         <img src="logo-coracao.png" alt="logo coração - vitale" width={50} />
         <h1 className="text-lg font-extrabold text-azul-escuro">Inquérito de satisfação</h1>
       </div>
-      <div className="flex-grow space-y-6 mb-14 font-semibold overflow-auto">
+      <div className="flex-grow p-6 space-y-6 mb-6 font-semibold overflow-auto">
         {questions.slice(0, 5).map((question, index) => (
           <div key={index} className="space-y-2">
             <p className="text-azul-escuro">{question.text}</p>
@@ -62,7 +93,11 @@ export default function Admin({ handleBeforeStep, handleNextStep }: Props) {
                   className={`focus:outline-none ${responses[index] === emojiIndex + 1 ? 'border border-azul-escuro rounded-full' : ''}`}
                   onClick={() => handleEmojiClick(index, emojiIndex + 1)}
                 >
-                  <img src={emoji.src} alt={`emoji-${emojiIndex + 1}`} className="w-8 h-8 shadow-md rounded-full" />
+                  <img
+                    src={emoji.src}
+                    alt={`emoji-${emojiIndex + 1}`}
+                    className={`w-8 h-8 shadow-md rounded-full ${responses[index] !== null && responses[index] !== emojiIndex + 1 ? 'grayscale' : ''}`} // Aplica filtro grayscale aos emojis não selecionados
+                  />
                 </button>
               ))}
             </div>
@@ -74,32 +109,36 @@ export default function Admin({ handleBeforeStep, handleNextStep }: Props) {
           <p className="text-azul-escuro">{questions[5].text}</p>
           <div className="flex justify-center gap-4">
             <button
-              className={`px-4 py-2 focus:outline-none ${responses[5] === 1 ? 'bg-blue-600 text-white rounded-md' : 'bg-gray-200 text-black'}`}
+              className={`px-4 py-2 focus:outline-none shadow-md rounded-md  ${responses[5] === 1 ? 'bg-azul-agua text-white rounded-md' : 'bg-gray-200 text-black'}`}
               onClick={() => handleYesNoClick(1)}
             >
               Sim
             </button>
             <button
-              className={`px-4 py-2 focus:outline-none ${responses[5] === 2 ? 'bg-blue-600 text-white rounded-md' : 'bg-gray-200 text-black'}`}
+              className={`px-4 py-2 focus:outline-none shadow-md rounded-md ${responses[5] === 2 ? 'bg-azul-agua text-white rounded-md' : 'bg-gray-200 text-black'}`}
               onClick={() => handleYesNoClick(2)}
             >
               Não
             </button>
           </div>
           {responses[5] === 1 && (
-            <textarea
-              placeholder="Em que sentiu dificuldade?"
-              value={comments[5]}
-              onChange={handleCommentChange}
-              className="mt-4 p-2 w-full border rounded-md resize-none"
-              rows={3}
-            />
+            <>
+              <textarea
+                placeholder="Em que sentiu dificuldade?"
+                value={comments[5]}
+                onChange={handleCommentChange}
+                onBlur={handleCommentBlur}
+                className="mt-4 p-2 w-full border shadow-md focus:outline-none text-azul-escuro text-sm rounded-md resize-none"
+                rows={3}
+              />
+              {commentError && <p className="text-red-500 text-sm">{commentError}</p>}
+            </>
           )}
         </div>
 
         {/* Questão 7: Slider */}
         <div className="space-y-2">
-          <p className="text-azul-escuro">{questions[6].text}</p>
+          <p className="text-azul-escuro ">{questions[6].text}</p>
           <CustomizedSlider
             defaultValue={responses[6] !== null ? responses[6] : 50}
             onChange={(value) => handleEmojiClick(6, value)}
@@ -111,7 +150,8 @@ export default function Admin({ handleBeforeStep, handleNextStep }: Props) {
           <BarraProgresso progress={calculateProgress()} />
           <button
             onClick={handleNextStep}
-            className="px-6 py-2 bg-azul text-white rounded-full shadow-md"
+            className={`px-6 py-2 bg-azul text-white rounded-full shadow-md ${!allQuestionsAnswered() ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={!allQuestionsAnswered()}
           >
             Avançar
           </button>
@@ -143,5 +183,5 @@ const emojis = [
 
 // Componente da barra de progresso
 function BarraProgresso({ progress }: { progress: number }) {
-  return <ProgressBar animated now={progress} variant='info' className="w-full bg-azul shadow-md" />;
+  return <ProgressBar animated now={progress} variant='info' className="w-full shadow-md" />;
 }

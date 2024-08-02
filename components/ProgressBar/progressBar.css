@@ -1,0 +1,14 @@
+/* ProgressBar.css */
+.custom .progress-bar {
+    background-color: #4e8baa !important; /* Cor da barra preenchida */
+  }
+  
+  .custom .progress {
+    background-color: #c0d8e1 !important; /* Cor de fundo da barra */
+    border-radius: 5px; /* Adiciona um pequeno arredondamento aos cantos */
+  }
+  
+  .custom .progress-bar-striped {
+    background-color: #4e8baa !important;
+  }
+  

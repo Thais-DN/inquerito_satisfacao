@@ -8,45 +8,49 @@ import React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function Home() {
-  const [currentStep, setCurrentStep] = React.useState<number>(1)
+  // Estado para acompanhar a etapa atual do formulário
+  const [currentStep, setCurrentStep] = React.useState<number>(1);
 
-  function handleNextStep(){
+  // Função para avançar para a próxima etapa
+  function handleNextStep() {
     setCurrentStep((prevStep) => {
-      if (prevStep < 4) {
+      if (prevStep < 4) {  // Verifica se não é a última etapa
         return prevStep + 1;
       }
-      return prevStep;
+      return prevStep;  // Se for a última etapa, não muda
     });
   }
 
-  function handleBeforeStep(){
+  // Função para voltar à etapa anterior
+  function handleBeforeStep() {
     setCurrentStep((prevStep) => {
-      if (prevStep > 1) {
+      if (prevStep > 1) {  // Verifica se não é a primeira etapa
         return prevStep - 1;
       }
-      return prevStep;
+      return prevStep;  // Se for a primeira etapa, não muda
     });
   }
 
-
+  // Função para renderizar o componente correto com base na etapa atual
   const renderStepComponent = (currentStep: number) => {
-    switch(currentStep){
+    switch(currentStep) {
       case 1: 
-        return <Credenciais handleNextStep={handleNextStep} />
+        return <Credenciais handleNextStep={handleNextStep} />;
       case 2: 
-        return <Admin handleBeforeStep={handleBeforeStep} handleNextStep={handleNextStep} />
+        return <Admin handleBeforeStep={handleBeforeStep} handleNextStep={handleNextStep} />;
       case 3: 
-        return <Consulta handleBeforeStep={handleBeforeStep} handleNextStep={handleNextStep} />
+        return <Consulta handleBeforeStep={handleBeforeStep} handleNextStep={handleNextStep} />;
       case 4: 
-        return <Geral handleBeforeStep={handleBeforeStep} handleNextStep={handleNextStep} />
+        return <Geral handleBeforeStep={handleBeforeStep} handleNextStep={handleNextStep} />;
       default:
-        return <Credenciais handleNextStep={handleNextStep}  />
+        return <Credenciais handleNextStep={handleNextStep} />;
     }
   }
 
+  // Renderiza o componente atual em um contêiner principal
   return (
     <main className="h-screen">
-        {renderStepComponent(currentStep)}
+      {renderStepComponent(currentStep)}
     </main>
   );
 }

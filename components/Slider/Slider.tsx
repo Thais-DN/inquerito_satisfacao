@@ -5,7 +5,6 @@ import './Slider.css'; // Importação do CSS separado
 type EmojiMapKey = 0 | 25 | 50 | 75 | 100;
 
 // Definição das labels e emojis associados
-const phaseLabels = ["Muito Ruim", "Ruim", "Médio", "Bom", "Muito Bom"];
 const emojiMap: Record<EmojiMapKey, string> = {
   0: "/emoji-1.png",
   25: "/emoji-2.png",
@@ -36,7 +35,7 @@ const CustomizedSlider: React.FC<SliderProps> = ({ defaultValue, onChange }) => 
   };
 
   return (
-    <div className="slider-container min-w-56 relative mb-6">
+    <div className="slider-container w-full max-w-md pr mx-auto relative mb-4">
       <input
         type="range"
         min="0"
@@ -44,10 +43,11 @@ const CustomizedSlider: React.FC<SliderProps> = ({ defaultValue, onChange }) => 
         step="25"
         value={value}
         onChange={handleChange}
-        className="slider"
+        className="slider shadow-md"
         style={{
           background: `linear-gradient(to right, #52af77 ${value}%, #ddd ${value}%)`,
-          transition: 'background 0.4s ease-in-out'  // Suaviza o movimento do background
+          transition: 'background 0.4s ease-in-out', // Suaviza o movimento do background
+          width: '100%'
         }}
       />
       <div
@@ -55,15 +55,12 @@ const CustomizedSlider: React.FC<SliderProps> = ({ defaultValue, onChange }) => 
         style={{ left: `${value}%`, transition: 'left 0.4s ease-in-out' }}
       >
         <div className="flex flex-col items-center">
-          <div className="bg-gray-100 border border-gray-400 text-sm text-center px-2 py-1 rounded-sm mb-8 whitespace-nowrap">
-            {phaseLabels[value / 25]}  {/* Acessa usando a indexação correta */}
-          </div>
+          
           <img
             src={emojiMap[value as EmojiMapKey]}  
-            alt={phaseLabels[value / 25]}
-            className="w-12 h-12"
+            className="w-10 h-10 md:w-12 md:h-12 shadow-md rounded-full" // Ajuste o tamanho do emoji para caber em diferentes tamanhos de tela
             draggable={false}
-            style={{ transform: 'translateY(-70%)', transition: 'transform 0.4s ease-in-out' }}
+            style={{ transform: 'translateY(0%)', transition: 'transform 0.4s ease-in-out' }}
           />
         </div>
       </div>
