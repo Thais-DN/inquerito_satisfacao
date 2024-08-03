@@ -46,19 +46,19 @@ const CustomizedSlider: React.FC<SliderProps> = ({ defaultValue, onChange }) => 
         className="slider shadow-md"
         style={{
           background: `linear-gradient(to right, #52af77 ${value}%, #ddd ${value}%)`,
-          transition: 'background 10s ease-in-out', // Suaviza o movimento do background
+          transition: 'background 0.4s ease-in-out', // Suaviza o movimento do background
           width: '100%',
-          height: "25px"
+          height: "25px",
         }}
       />
       <div
         className="thumb absolute transform -translate-x-1/2 transition-all"
-        style={{ left: `${value}%`, transition: 'left 0.4s ease-in-out' }}
+        style={{ left: `calc(${value}%)` }}  // Ajusta a posição final do emoji
       >
         <div className="flex flex-col items-center">
           <img
             src={emojiMap[value as EmojiMapKey]}
-            className="w-10 h-10 md:w-12 md:h-12 shadow-md rounded-full" // Ajuste o tamanho do emoji para caber em diferentes tamanhos de tela
+            className="min-w-10 w-10 min-h-10 h-10  md:w-12 md:h-12 shadow-md rounded-full" // Ajuste o tamanho do emoji para caber em diferentes tamanhos de tela
             draggable={false}
             style={{ transform: 'translateY(-10%)', transition: 'transform 0.4s ease-in-out' }}
           />

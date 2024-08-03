@@ -1,11 +1,30 @@
 import { Globe, Mail, Phone } from 'lucide-react';
-import React from 'react'
+import React, { useState } from 'react';
 
 interface Props {
   handleNextStep: () => void;
 }
 
 function Credenciais({ handleNextStep }: Props) {
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
+
+  // Função para validar o e-mail
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  // Função chamada ao clicar no botão
+  const handleClick = () => {
+    if (validateEmail(email)) {
+      setError(''); // Limpa qualquer erro anterior
+      handleNextStep(); // Chama a função passada por props
+    } else {
+      setError('Por favor, insira um e-mail válido.');
+    }
+  };
+
   return (
     <div className="flex flex-col justify-between h-screen w-screen bg-gradient-to-b from-white to-purple-200 font-signika">
       <div className="flex items-start justify-center pt-7">
@@ -22,14 +41,18 @@ function Credenciais({ handleNextStep }: Props) {
           type="email" 
           name="email" 
           id="email" 
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           placeholder="exemplo@exemplo.com" 
-          className="w-full max-w-md border border-gray-300 rounded-xl p-2 pl-4 bg-white shadow"
+          className="w-full max-w-md border border-gray-300 focus:outline-none rounded-xl p-2 pl-4 bg-white shadow"
         />
+        {/* Mensagem de erro */}
+        {error && <p className="text-red-500 mt-2">{error}</p>}
       </div>
 
       <div className="flex justify-center mt-8">
         <button 
-          onClick={handleNextStep} 
+          onClick={handleClick} 
           className="px-14 py-3 text-md bg-azul text-white rounded-3xl shadow-lg"
         >
           Iniciar

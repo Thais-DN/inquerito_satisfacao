@@ -114,7 +114,7 @@ export default function Admin({ handleBeforeStep, handleNextStep }: Props) {
           <div className="flex justify-center gap-4">
             <button
               className={`px-4 py-2 focus:outline-none shadow-md rounded-md ${
-                responses[5] === 1 ? 'bg-azul-agua text-white' : 'bg-gray-200 text-black'
+                responses[5] === 1 ? 'bg-azul-agua text-white' : 'bg-white text-black'
               }`}
               onClick={() => handleYesNoClick(1)}
             >
@@ -122,7 +122,7 @@ export default function Admin({ handleBeforeStep, handleNextStep }: Props) {
             </button>
             <button
               className={`px-4 py-2 focus:outline-none shadow-md rounded-md ${
-                responses[5] === 2 ? 'bg-azul-agua text-white' : 'bg-gray-200 text-black'
+                responses[5] === 2 ? 'bg-azul-agua text-white' : 'bg-white text-black'
               }`}
               onClick={() => handleYesNoClick(2)}
             >
