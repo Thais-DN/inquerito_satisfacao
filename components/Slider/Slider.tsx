@@ -45,7 +45,7 @@ const CustomizedSlider: React.FC<SliderProps> = ({ defaultValue, onChange }) => 
         onChange={handleChange}
         className="slider shadow-md"
         style={{
-          background: `linear-gradient(to right, #52af77 ${value}%, #ddd ${value}%)`,
+          background: `linear-gradient(to right, #0fa5ab ${value}%, #ddd ${value}%)`,
           transition: 'background 0.4s ease-in-out', // Suaviza o movimento do background
           width: '100%',
           height: "25px",

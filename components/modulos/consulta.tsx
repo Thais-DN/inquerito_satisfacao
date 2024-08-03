@@ -32,10 +32,10 @@ export default function Consulta({ handleBeforeStep, handleNextStep }: Props) {
       </div>
 
       {/* Main content */}
-      <div className="flex flex-col items-center justify-center px-4 mt-7 flex-1">
+      <div className="flex flex-col items-center justify-center px-4 mt-7">
         <div className="bg-white p-6 rounded-lg shadow-md text-center max-w-md w-full">
-          <p className="text-lg text-azul-escuro mb-4">
-            Sua opinião é muito importante para nós e ajuda a melhorar os nossos serviços.
+          <p className="text-lg text-azul-escuro">
+            Sua opinião é muito importante para Vitale e ajuda a melhorar os nossos serviços.
           </p>
         </div>
       </div>
