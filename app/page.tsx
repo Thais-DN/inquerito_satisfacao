@@ -1,11 +1,10 @@
 "use client"
 
 import Credenciais from "@/components/credenciais/credenciais";
-import Admin from "@/components/modulos/admin";
-import Consulta from "@/components/modulos/consulta";
-import Geral from "@/components/modulos/geral";
 import React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Inquerito from "@/components/modulos/inquerito";
+import Agradecimento from "@/components/modulos/agradecimento";
 
 export default function Home() {
   // Estado para acompanhar a etapa atual do formulário
@@ -37,11 +36,9 @@ export default function Home() {
       case 1: 
         return <Credenciais handleNextStep={handleNextStep} />;
       case 2: 
-        return <Admin handleBeforeStep={handleBeforeStep} handleNextStep={handleNextStep} />;
+        return <Inquerito handleBeforeStep={handleBeforeStep} handleNextStep={handleNextStep} />;
       case 3: 
-        return <Consulta handleBeforeStep={handleBeforeStep} handleNextStep={handleNextStep} />;
-      case 4: 
-        return <Geral handleBeforeStep={handleBeforeStep} handleNextStep={handleNextStep} />;
+        return <Agradecimento handleBeforeStep={handleBeforeStep} handleNextStep={handleNextStep} />;
       default:
         return <Credenciais handleNextStep={handleNextStep} />;
     }

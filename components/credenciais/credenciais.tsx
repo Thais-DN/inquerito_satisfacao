@@ -64,7 +64,7 @@ function Credenciais({ handleNextStep }: Props) {
       <div className="flex items-center justify-between pt-3 px-3 bg-azul text-white mt-10">
         <div className='flex flex-col'>
           <div className="mb-2">
-            <a href="https://vitale.pt" className="hover:underline no-underline flex items-center gap-2 text-white">
+            <a href="https://vitale.healthysmartcities.pt/" className="hover:underline no-underline flex items-center gap-2 text-white">
             <Globe size={18}/> vitale.pt</a>
           </div>
           <div className="mb-2">

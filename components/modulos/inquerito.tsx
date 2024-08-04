@@ -10,7 +10,7 @@ interface Props {
   handleNextStep: () => void;
 }
 
-export default function Admin({ handleBeforeStep, handleNextStep }: Props) {
+export default function Inquerito({ handleBeforeStep, handleNextStep }: Props) {
   const [responses, setResponses] = useState<Array<number | null>>(Array(questions.length).fill(null));
   const [comments, setComments] = useState<string>("");
   const [commentError, setCommentError] = useState<string>(''); // Error message state for comment validation
