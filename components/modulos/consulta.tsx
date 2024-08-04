@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Globe, Mail, Phone } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { removeEmailLocalStorage } from '@/utils/handleEmailLocalStorage';
 
 // Interface for the props
 interface Props {
@@ -18,6 +19,7 @@ export default function Consulta({ handleBeforeStep, handleNextStep }: Props) {
       origin: { y: 0.6 },  // Origin point of the confetti
       colors: ['#0fa5ab', '#d3afe4', '#4e8baa'],  // Colors of the confetti
     });
+    removeEmailLocalStorage()
   }, []); // Empty dependency array ensures this runs only once
 
   return (
@@ -41,7 +43,7 @@ export default function Consulta({ handleBeforeStep, handleNextStep }: Props) {
       </div>
 
       {/* Footer with contact details */}
-      <div className="flex items-center justify-between py-4 px-6 bg-azul text-white mt-10 rounded-t-lg">
+      <div className="flex items-center justify-between py-4 px-6 bg-azul text-white mt-10">
         <div className='flex flex-col'>
           <div className="mb-2">
             <a href="https://vitale.pt" className="hover:underline no-underline flex items-center gap-2 text-white">

@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import CustomizedSlider from '../Slider/Slider'; // Importa o componente Slider
+import submitForm from '@/service/submitForm';
+import convertData from '@/utils/convertData';
+import { getEmailLocalStorage } from '@/utils/handleEmailLocalStorage';
 
 interface Props {
   handleBeforeStep: () => void;
@@ -9,7 +12,7 @@ interface Props {
 
 export default function Admin({ handleBeforeStep, handleNextStep }: Props) {
   const [responses, setResponses] = useState<Array<number | null>>(Array(questions.length).fill(null));
-  const [comments, setComments] = useState<string[]>(Array(questions.length).fill(''));
+  const [comments, setComments] = useState<string>("");
   const [commentError, setCommentError] = useState<string>(''); // Error message state for comment validation
 
   // Manipula a mudança no slider ou nos botões de emoji
@@ -27,18 +30,14 @@ export default function Admin({ handleBeforeStep, handleNextStep }: Props) {
 
     // Limpa o comentário se "Não" for selecionado
     if (value === 2) {
-      const newComments = [...comments];
-      newComments[5] = ''; // Limpa o comentário se "Não" for selecionado
-      setComments(newComments);
+      setComments("");
       setCommentError(''); // Reset comment error
     }
   };
 
   // Manipula a mudança de texto para a questão 6
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newComments = [...comments];
-    newComments[5] = e.target.value;
-    setComments(newComments);
+    setComments(e.target.value);
 
     // Remove error message if comment is valid
     if (e.target.value.trim().length >= 15) {
@@ -48,18 +47,20 @@ export default function Admin({ handleBeforeStep, handleNextStep }: Props) {
 
   // Verifica se o comentário tem pelo menos 15 caracteres ao sair do campo
   const handleCommentBlur = () => {
-    if (comments[5].trim().length < 15 && responses[5] === 1) {
+    if (comments.trim().length < 15 && responses[5] === 1) {
       setCommentError('O comentário deve ter pelo menos 15 caracteres.');
     } else {
       setCommentError('');
     }
+
+
   };
 
   // Calcula o progresso das respostas
   const calculateProgress = () => {
     const answered = responses.filter((response, index) => {
       if (index === 5) {
-        return response !== null && (response === 2 || (response === 1 && comments[5].trim().length >= 15));
+        return response !== null && (response === 2 || (response === 1 && comments.trim().length >= 15));
       }
       return response !== null;
     }).length;
@@ -70,10 +71,22 @@ export default function Admin({ handleBeforeStep, handleNextStep }: Props) {
   const allQuestionsAnswered = () => {
     return responses.every((response, index) => {
       if (index === 5) {
-        return response !== null && (response === 2 || (response === 1 && comments[5].trim().length >= 15));
+        return response !== null && (response === 2 || (response === 1 && comments.trim().length >= 15));
       }
       return response !== null;
     });
+  };
+
+  const handleSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    if(!allQuestionsAnswered()){
+      alert("Existem perguntas ainda não respondidas.")
+    } else {
+      const userEmail = getEmailLocalStorage()
+      const data = convertData(responses, comments, userEmail)
+      submitForm(data)
+      handleNextStep()
+    }
   };
 
   return (
@@ -133,7 +146,7 @@ export default function Admin({ handleBeforeStep, handleNextStep }: Props) {
             <>
               <textarea
                 placeholder="Em que sentiu dificuldade?"
-                value={comments[5]}
+                value={comments}
                 onChange={handleCommentChange}
                 onBlur={handleCommentBlur}
                 className="mt-4 p-2 w-full border shadow-md focus:outline-none text-azul-escuro text-sm rounded-md resize-none"
@@ -157,11 +170,9 @@ export default function Admin({ handleBeforeStep, handleNextStep }: Props) {
         <div className="flex items-center gap-2">
           <BarraProgresso progress={calculateProgress()} />
           <button
-            onClick={handleNextStep}
-            className={`px-6 py-2 bg-azul text-white rounded-full shadow-md ${
-              !allQuestionsAnswered() ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-            disabled={!allQuestionsAnswered()}
+            onClick={handleSubmit}
+            type='submit'
+            className={`px-6 py-2 bg-azul text-white rounded-full shadow-md`}
           >
             Avançar
           </button>

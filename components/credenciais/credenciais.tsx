@@ -1,3 +1,4 @@
+import { setEmailLocalStorage } from '@/utils/handleEmailLocalStorage';
 import { Globe, Mail, Phone } from 'lucide-react';
 import React, { useState } from 'react';
 
@@ -19,6 +20,7 @@ function Credenciais({ handleNextStep }: Props) {
   const handleClick = () => {
     if (validateEmail(email)) {
       setError(''); // Limpa qualquer erro anterior
+      setEmailLocalStorage(email)
       handleNextStep(); // Chama a função passada por props
     } else {
       setError('Por favor, insira um e-mail válido.');
