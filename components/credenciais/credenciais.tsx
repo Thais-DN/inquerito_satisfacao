@@ -29,32 +29,43 @@ function Credenciais({ handleNextStep }: Props) {
 
   return (
     <div className="flex flex-col justify-between h-screen w-screen bg-gradient-to-b from-white to-purple-200 font-signika">
-      <div className="flex items-start justify-center pt-7">
+      {/* Centralizar logo em telas maiores */}
+      <div className="flex items-start justify-center pt-7 md:pt-10">
         <img src="Logo.png" alt="Logo da Vitale" width={110} />
       </div>
 
-      <div className="text-center mt-7">
-        <h1 className="text-2xl text-azul-escuro font-extrabold">Inquérito de satisfação</h1>
+      {/* Ajuste de título em telas maiores */}
+      <div className="text-center mt-7 md:mt-10">
+        <h1 className="text-2xl md:text-3xl text-azul-escuro font-extrabold">
+          Inquérito de satisfação
+        </h1>
       </div>
 
-      <div className="w-full flex flex-col px-4 mt-7">
-        <label htmlFor="email" className="mb-1 ml-2 text-md font-bold text-azul-escuro">Insira seu e-mail:</label>
-        <input 
-          type="email" 
-          name="email" 
-          id="email" 
+      {/* Container principal para centralizar e limitar largura */}
+      <div className="flex flex-col px-4 mt-7 md:mt-10 w-full max-w-xl mx-auto">
+        <label
+          htmlFor="email"
+          className="mb-1 ml-2 text-md font-bold text-azul-escuro"
+        >
+          Insira seu e-mail:
+        </label>
+        <input
+          type="email"
+          name="email"
+          id="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="exemplo@exemplo.com" 
+          placeholder="exemplo@exemplo.com"
           className="w-full max-w-md border border-gray-300 focus:outline-none rounded-xl p-2 pl-4 bg-white shadow"
         />
         {/* Mensagem de erro */}
         {error && <p className="text-red-500 mt-2">{error}</p>}
       </div>
 
-      <div className="flex justify-center mt-8">
-        <button 
-          onClick={handleClick} 
+      {/* Botão centralizado e espaçamento em telas maiores */}
+      <div className="flex justify-center mt-8 md:mt-12">
+        <button
+          onClick={handleClick}
           className="px-14 py-3 text-md bg-azul text-white rounded-3xl shadow-lg"
         >
           Iniciar

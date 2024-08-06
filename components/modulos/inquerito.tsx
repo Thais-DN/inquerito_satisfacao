@@ -52,8 +52,6 @@ export default function Inquerito({ handleBeforeStep, handleNextStep }: Props) {
     } else {
       setCommentError('');
     }
-
-
   };
 
   // Calcula o progresso das respostas
@@ -79,13 +77,13 @@ export default function Inquerito({ handleBeforeStep, handleNextStep }: Props) {
 
   const handleSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    if(!allQuestionsAnswered()){
-      alert("Existem perguntas ainda não respondidas.")
+    if (!allQuestionsAnswered()) {
+      alert("Existem perguntas ainda não respondidas.");
     } else {
-      const userEmail = getEmailLocalStorage()
-      const data = convertData(responses, comments, userEmail)
-      submitForm(data)
-      handleNextStep()
+      const userEmail = getEmailLocalStorage();
+      const data = convertData(responses, comments, userEmail);
+      submitForm(data);
+      handleNextStep();
     }
   };
 
@@ -97,7 +95,7 @@ export default function Inquerito({ handleBeforeStep, handleNextStep }: Props) {
       </div>
       <div className="flex-grow p-6 space-y-6 mb-6 font-semibold overflow-auto">
         {questions.slice(0, 5).map((question, index) => (
-          <div key={index} className="space-y-2">
+          <div key={index} className="space-y-2 md:grid md:grid-cols-2 md:gap-4 md:items-center">
             <p className="text-azul-escuro">{question.text}</p>
             <div className="flex justify-center gap-4">
               {emojis.map((emoji, emojiIndex) => (
@@ -122,7 +120,7 @@ export default function Inquerito({ handleBeforeStep, handleNextStep }: Props) {
         ))}
 
         {/* Questão 6: Sim ou Não */}
-        <div className="space-y-2">
+        <div className="space-y-2 md:grid md:grid-cols-2 md:gap-4 md:items-center">
           <p className="text-azul-escuro">{questions[5].text}</p>
           <div className="flex justify-center gap-4">
             <button
@@ -158,7 +156,7 @@ export default function Inquerito({ handleBeforeStep, handleNextStep }: Props) {
         </div>
 
         {/* Questão 7: Slider */}
-        <div className="space-y-2">
+        <div className="space-y-2 md:grid md:grid-cols-2 md:gap-4 md:items-center">
           <p className="text-azul-escuro ">{questions[6].text}</p>
           <CustomizedSlider
             defaultValue={responses[6] !== null ? responses[6] : 50}
@@ -171,7 +169,7 @@ export default function Inquerito({ handleBeforeStep, handleNextStep }: Props) {
           <BarraProgresso progress={calculateProgress()} />
           <button
             onClick={handleSubmit}
-            type='submit'
+            type="submit"
             className={`px-6 py-2 bg-azul text-white rounded-full shadow-md`}
           >
             Avançar
