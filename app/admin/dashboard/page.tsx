@@ -3,20 +3,23 @@
 
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/service/dbconnection';
+import BarChart from '@/components/dashboard/BarChart';
+import PieChart from '@/components/dashboard/PieChart';
+import LineChart from '@/components/dashboard/LineChart';
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   BarElement,
   ArcElement,
+  LineElement,
+  PointElement,
   Title,
   Tooltip,
   Legend,
 } from 'chart.js';
-import BarChart from '@/components/dashboard/BarChart';
-import PieChart from '@/components/dashboard/PieChart';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, LineElement, PointElement, Title, Tooltip, Legend);
 
 interface SurveyData {
   id: number;
@@ -27,6 +30,7 @@ interface SurveyData {
   pergunta_04: string;
   pergunta_05: string;
   pergunta_06: string;
+  pergunta_07: string; // Field for question 7
 }
 
 const Dashboard: React.FC = () => {
@@ -35,7 +39,9 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     const loadData = async () => {
-      const { data, error } = await supabase.from('tabela_inquerito').select('id, email, pergunta_01, pergunta_02, pergunta_03, pergunta_04, pergunta_05, pergunta_06');
+      const { data, error } = await supabase
+        .from('tabela_inquerito')
+        .select('id, email, pergunta_01, pergunta_02, pergunta_03, pergunta_04, pergunta_05, pergunta_06, pergunta_07');
 
       if (error) {
         console.error('Erro ao buscar dados:', error);
@@ -64,12 +70,15 @@ const Dashboard: React.FC = () => {
   // Calculate Yes/No percentages for question 6
   const { yesPercentage, noPercentage } = calculateYesNoPercentages(surveyData);
 
-  return (
-    <div className="bg-gradient-to-br h-screen from-blue-200 to-purple-300 font-signika">
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold ml-2 mb-8">Resultados - 2024</h1>
+  // Calculate distribution for question 7
+  const question7Distribution = calculateQuestion7Distribution(surveyData);
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  return (
+    <div className="bg-gradient-to-br min-h-screen from-blue-200 to-purple-300 font-signika">
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold text-center mb-8">Resultados - 2024</h1>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
           {/* Card for Total Number of Responses */}
           <div className="card flex flex-col items-center justify-center bg-white bg-opacity-20 rounded-lg p-4 shadow-lg text-center">
             <p className="font-semibold">Número de clientes</p>
@@ -83,9 +92,21 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="mt-8 h-96 flex justify-around bg-white bg-opacity-20 p-6 rounded-lg shadow-lg">
-          <BarChart data={averageScores} />
-          <PieChart yesPercentage={yesPercentage} noPercentage={noPercentage} />
+        {/* Line and Pie charts side by side */}
+        <div className="flex flex-col lg:flex-row justify-center items-stretch gap-4 mb-8">
+          <div className="w-full lg:w-1/2 bg-white bg-opacity-20 p-6 rounded-lg shadow-lg flex items-center">
+            <LineChart data={question7Distribution} />
+          </div>
+          <div className="w-full lg:w-1/2 bg-white bg-opacity-20 p-6 rounded-lg shadow-lg flex items-center">
+            <PieChart yesPercentage={yesPercentage} noPercentage={noPercentage} />
+          </div>
+        </div>
+
+        {/* Bar chart centered below */}
+        <div className="flex justify-center">
+          <div className="w-full lg:w-2/3 bg-white bg-opacity-20 p-6 rounded-lg shadow-lg">
+            <BarChart data={averageScores} />
+          </div>
         </div>
       </div>
     </div>
@@ -125,6 +146,20 @@ const calculateYesNoPercentages = (data: SurveyData[]) => {
   const noPercentage = (counts.no / total) * 100;
 
   return { yesPercentage, noPercentage };
+};
+
+const calculateQuestion7Distribution = (data: SurveyData[]) => {
+  const distribution = [0, 0, 0, 0, 0];
+  data.forEach((entry) => {
+    const value = parseInt(entry.pergunta_07 || '0', 10);
+    if (value === 0) distribution[0] += 1;
+    else if (value === 25) distribution[1] += 1;
+    else if (value === 50) distribution[2] += 1;
+    else if (value === 75) distribution[3] += 1;
+    else if (value === 100) distribution[4] += 1;
+  });
+
+  return distribution; // Returns the count for each percentage option
 };
 
 export default Dashboard;

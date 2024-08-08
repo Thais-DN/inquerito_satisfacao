@@ -1,4 +1,4 @@
-// components/LineChart.tsx
+// components/dashboard/LineChart.tsx
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 import { ChartOptions } from 'chart.js';
@@ -12,7 +12,7 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
     labels: ['0%', '25%', '50%', '75%', '100%'],
     datasets: [
       {
-        label: 'Probabilidade de Escolha',
+        label: 'Número de Pessoas',
         data,
         fill: false,
         borderColor: '#6A0DAD',
@@ -39,9 +39,14 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
     scales: {
       y: {
         beginAtZero: true,
-        max: 100, // Percentual de 0 a 100
         ticks: {
-          stepSize: 25,
+          stepSize: 1, // Incremento de 1 para mostrar cada pessoa
+        },
+      },
+      x: {
+        title: {
+          display: true,
+          text: 'Porcentagem de Escolha',
         },
       },
     },

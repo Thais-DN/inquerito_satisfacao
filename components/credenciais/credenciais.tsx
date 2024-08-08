@@ -47,7 +47,7 @@ function Credenciais({ handleNextStep }: Props) {
           htmlFor="email"
           className="mb-1 ml-2 text-md font-bold text-azul-escuro"
         >
-          Insira seu e-mail:
+          Insira o seu e-mail:
         </label>
         <input
           type="email"
