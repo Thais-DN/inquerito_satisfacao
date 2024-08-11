@@ -22,6 +22,7 @@ import Navbar from '@/components/DashNav/Navbar';
 import Card from '@/components/Charts/Card';
 import BarChart from '@/components/Charts/BarChart/BarChart';
 import Question from '@/components/Charts/BarChart/Question';
+import FloatingMenu from '@/components/dashboard/FloatingMenu';
 
 const DashQuestions = [
   {question: "Você esta satisfeito com a qualidade do atendimento prestado pela vitale e seu colaboradores", color: "#363b56"},
@@ -166,6 +167,7 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
         </div>
+        <FloatingMenu />
       </div>
     </div>
   );
