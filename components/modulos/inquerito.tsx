@@ -97,24 +97,31 @@ export default function Inquerito({ handleBeforeStep, handleNextStep }: Props) {
         {questions.slice(0, 5).map((question, index) => (
           <div key={index} className="space-y-2 md:grid md:grid-cols-2 md:items-center">
             <span className="text-azul-escuro">{question.text}</span>
-            <div className="flex justify-center gap-4 "> {/* Remove a margin-top em MD */}
-              {emojis.map((emoji, emojiIndex) => (
-                <button
-                  key={emojiIndex}
-                  className={`focus:outline-none rounded-full transition-all duration-300 ${
-                    responses[index] === emojiIndex + 1 ? '' : ''
-                  }`}
-                  onClick={() => handleEmojiClick(index, emojiIndex + 1)}
-                >
-                  <img
-                    src={emoji.src}
-                    alt={`emoji-${emojiIndex + 1}`}
-                    className={`w-8 h-8 shadow-md rounded-full ${
-                      responses[index] !== null && responses[index] !== emojiIndex + 1 ? 'grayscale' : ''
-                    }`} // Aplica filtro grayscale aos emojis não selecionados
-                  />
-                </button>
-              ))}
+            <div className="flex flex-col items-center"> {/* Adiciona flex-col e items-center para alinhar */}
+              <div className="flex justify-center gap-4">
+                {emojis.map((emoji, emojiIndex) => (
+                  <button
+                    key={emojiIndex}
+                    className={`focus:outline-none rounded-full transition-all duration-300 ${
+                      responses[index] === emojiIndex + 1 ? '' : ''
+                    }`}
+                    onClick={() => handleEmojiClick(index, emojiIndex + 1)}
+                    title={getEmojiTitle(emojiIndex + 1)} // Placeholder nos emojis
+                  >
+                    <img
+                      src={emoji.src}
+                      alt={`emoji-${emojiIndex + 1}`}
+                      className={`w-8 h-8 shadow-md rounded-full ${
+                        responses[index] !== null && responses[index] !== emojiIndex + 1 ? 'grayscale' : ''
+                      }`} // Aplica filtro grayscale aos emojis não selecionados
+                    />
+                  </button>
+                ))}
+              </div>
+              <div className="flex justify-between w-full mt-2 px-4 md:hidden"> {/* Espaça os textos, escondidos em telas MD+ */}
+                <span className="text-xs text-gray-500">Muito ruim</span>
+                <span className="text-xs text-gray-500">Muito bom</span>
+              </div>
             </div>
           </div>
         ))}
@@ -155,7 +162,6 @@ export default function Inquerito({ handleBeforeStep, handleNextStep }: Props) {
             </>
           )}
         </div>
-        
 
         {/* Questão 7: Slider */}
         <div className="space-y-2 md:grid md:grid-cols-2 md:gap-4 md:items-center">
@@ -182,6 +188,24 @@ export default function Inquerito({ handleBeforeStep, handleNextStep }: Props) {
   );
 }
 
+// Função para retornar o placeholder adequado para cada emoji
+const getEmojiTitle = (index: number) => {
+  switch (index) {
+    case 1:
+      return "Muito ruim";
+    case 2:
+      return "Ruim";
+    case 3:
+      return "Médio";
+    case 4:
+      return "Bom";
+    case 5:
+      return "Muito bom";
+    default:
+      return "";
+  }
+}
+
 // Lista de perguntas
 const questions = [
   { text: '1. A equipa conseguiu resolver suas dúvidas e problemas de forma satisfatória?' },
@@ -206,4 +230,3 @@ const emojis = [
 function BarraProgresso({ progress }: { progress: number }) {
   return <ProgressBar animated now={progress} variant="info" className="w-full shadow-md" />;
 }
-
