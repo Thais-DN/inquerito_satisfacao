@@ -35,14 +35,14 @@ const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br font-signika from-blue-200 to-purple-300">
-      <div className="flex w-full max-w-4xl mx-auto bg-white bg-opacity-30 rounded-lg shadow-lg overflow-hidden">
-        <div className="w-1/2 bg-white bg-opacity-40 flex items-center justify-center p-6">
+      <div className="flex w-full mx-4 max-w-4xl md:mx-auto bg-white bg-opacity-30 rounded-lg shadow-lg overflow-hidden">
+        <div className="md:w-1/2 bg-white bg-opacity-40 md:flex items-center justify-center p-6 hidden">
           <img src="/Logo.png" alt="Vitale Logo" className="w-32 h-32" />
         </div>
 
-        <div className="w-1/2 p-8">
+        <div className="w-full md:w-1/2 p-8">
           <div className="flex justify-center mb-6">
-            <User className="w-24 h-24 text-gray-400 shadow-lg rounded-full" />
+            <User className="w-24 h-24 text-gray-400 border border-gray-400 shadow-md rounded-full" />
           </div>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">

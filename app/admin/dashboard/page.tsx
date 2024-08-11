@@ -1,9 +1,7 @@
-"use client";
-
+"use client"
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/service/dbconnection';
-import BarChart from '@/components/dashboard/BarChart';
 import PieChart from '@/components/dashboard/PieChart';
 import LineChart from '@/components/dashboard/LineChart';
 import {
@@ -18,6 +16,20 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { format } from 'date-fns'; // Para formatar as datas
+import GaugeChartCustom from '@/components/Charts/GaugeChart';
+import Navbar from '@/components/DashNav/Navbar';
+import Card from '@/components/Charts/Card';
+import BarChart from '@/components/Charts/BarChart/BarChart';
+import Question from '@/components/Charts/BarChart/Question';
+
+const DashQuestions = [
+  {question: "Você esta satisfeito com a qualidade do atendimento prestado pela vitale e seu colaboradores", color: "#363b56"},
+  {question: "Você esta satisfeito com a qualidade do atendimento prestado pela vitale e seu colaboradores", color: "#4e8baa"},
+  {question: "Você esta satisfeito com a qualidade do atendimento prestado pela vitale e seu colaboradores", color: "#0fa5ab"},
+  {question: "Você esta satisfeito com a qualidade do atendimento prestado pela vitale e seu colaboradores", color: "#c8a2c8"},
+  {question: "Você esta satisfeito com a qualidade do atendimento prestado pela vitale e seu colaboradores", color: "#d3aef4"},
+]
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, LineElement, PointElement, Title, Tooltip, Legend);
 
@@ -33,9 +45,26 @@ interface SurveyData {
   pergunta_07: string; // Field for question 7
 }
 
+const calculatePromotersAndDetractors = (data: SurveyData[]) => {
+  let promoters = 0;
+  let detractors = 0;
+
+  data.forEach((entry) => {
+    const value = parseInt(entry.pergunta_07 || '0', 10);
+    if (value >= 50) {
+      promoters += 1;
+    } else if (value <= 25) {
+      detractors += 1;
+    }
+  });
+
+  return { promoters, detractors };
+};
+
 const Dashboard: React.FC = () => {
   const [surveyData, setSurveyData] = useState<SurveyData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [email, setEmail] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -46,6 +75,9 @@ const Dashboard: React.FC = () => {
         // Se não estiver autenticado, redireciona para a página de login
         router.push('/admin');
       } else {
+        setEmail(session.user.email || null);
+        // Define o email do usuário logado
+
         // Carrega os dados do dashboard se autenticado
         const { data, error } = await supabase
           .from('tabela_inquerito')
@@ -71,10 +103,27 @@ const Dashboard: React.FC = () => {
     );
   }
 
+  // Calcula o período de um ano a partir da data atual
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setFullYear(endDate.getFullYear() - 1);
+  const formattedStartDate = format(startDate, 'dd/MM/yyyy');
+  const formattedEndDate = format(endDate, 'dd/MM/yyyy');
+
   // Calculate total responses and averages
   const totalResponses = surveyData.length;
   const averageScores = calculateAverageScores(surveyData);
   const overallAverage = calculateOverallAverage(averageScores);
+
+  // Normaliza a média geral para o gráfico de gauge
+  const normalizedValue = (overallAverage - 1) / 4;
+  const displayValue = Math.round(normalizedValue * 100);
+
+  const { promoters, detractors } = calculatePromotersAndDetractors(surveyData);
+
+  // Calcula a porcentagem de promotores e detratores
+  const promotersPercentage = ((promoters / totalResponses) * 100).toFixed(0);
+  const detractorsPercentage = ((detractors / totalResponses) * 100).toFixed(0);
 
   // Calculate Yes/No percentages for question 6
   const { yesPercentage, noPercentage } = calculateYesNoPercentages(surveyData);
@@ -83,44 +132,45 @@ const Dashboard: React.FC = () => {
   const question7Distribution = calculateQuestion7Distribution(surveyData);
 
   return (
-    <div className="bg-gradient-to-br min-h-screen from-blue-200 to-purple-300 font-signika">
+    <div className="min-h-screen bg-blue-50 !font-signika">
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-center mb-8">Resultados - 2024</h1>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-          {/* Card for Total Number of Responses */}
-          <div className="card flex flex-col items-center justify-center bg-white bg-opacity-20 rounded-lg p-4 shadow-lg text-center">
-            <p className="font-semibold">Número de clientes</p>
-            <p className="text-2xl font-bold">{totalResponses}</p>
+        <Navbar userEmail={email ? email : ""} />
+  
+        <div className='w-full bg-white/50 rounded-lg p-8 px-12 shadow-lg mt-5'>
+          {/* Seção do Gráfico e dos Cards */}
+          <div className='flex justify-between items-center'>
+            <div className='flex justify-center items-center flex-col w-1/2'>
+              <h3 className="font-semibold text-blue-600 mb-4">Média geral de satisfação</h3>
+              <GaugeChartCustom normalizedValue={normalizedValue} displayValue={displayValue} />
+            </div>
+  
+            <div className="w-auto grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+              <Card cardTitle={'Promotores'} cardValue={`${promotersPercentage}%`} /> 
+              <Card cardTitle={'Detratores'} cardValue={`${detractorsPercentage}%`} />
+              <Card cardTitle={'Total de respostas'} cardValue={totalResponses} className='col-span-2' />  
+            </div>
           </div>
-
-          {/* Card for Overall Average Score */}
-          <div className="card flex flex-col items-center justify-center bg-white bg-opacity-20 rounded-lg p-4 shadow-lg text-center">
-            <p className="font-semibold">Média geral</p>
-            <p className="text-2xl font-bold">{overallAverage.toFixed(2)}</p>
-          </div>
-        </div>
-
-        {/* Line and Pie charts side by side */}
-        <div className="flex flex-col lg:flex-row justify-center items-stretch gap-4 mb-8">
-          <div className="w-full lg:w-1/2 bg-white bg-opacity-20 p-6 rounded-lg shadow-lg flex items-center">
-            <LineChart data={question7Distribution} />
-          </div>
-          <div className="w-full lg:w-1/2 bg-white bg-opacity-20 p-6 rounded-lg shadow-lg flex items-center">
-            <PieChart yesPercentage={yesPercentage} noPercentage={noPercentage} />
-          </div>
-        </div>
-
-        {/* Bar chart centered below */}
-        <div className="flex justify-center">
-          <div className="w-full lg:w-2/3 bg-white bg-opacity-20 p-6 rounded-lg shadow-lg">
-            <BarChart data={averageScores} />
+  
+          {/* Seção dos Gráficos de Barra e Perguntas */}
+          <div className='w-full flex px-2 bg-white rounded-lg shadow-lg'>
+            <div className='w-1/2 p-6'>
+              <BarChart data={averageScores} />
+            </div>
+  
+            <div className='w-1/2 p-6 flex flex-col justify-around '>
+              {DashQuestions.map((item, idx) => {
+                return (
+                  <Question color={item.color} text={item.question} key={idx} />
+                )
+              })}
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
-};
+}
+
 
 // Utility functions
 const calculateAverageScores = (data: SurveyData[]) => {
@@ -132,7 +182,7 @@ const calculateAverageScores = (data: SurveyData[]) => {
     sums[3] += parseFloat(entry.pergunta_04 || '0');
     sums[4] += parseFloat(entry.pergunta_05 || '0');
   });
-  return sums.map((sum) => sum / data.length); // Average from 1 to 5
+  return sums.map((sum) => sum / data.length); // Média de 1 a 5
 };
 
 const calculateOverallAverage = (averageScores: number[]) => {
@@ -168,7 +218,7 @@ const calculateQuestion7Distribution = (data: SurveyData[]) => {
     else if (value === 100) distribution[4] += 1;
   });
 
-  return distribution; // Returns the count for each percentage option
+  return distribution; // Retorna a contagem para cada opção de porcentagem
 };
 
 export default Dashboard;

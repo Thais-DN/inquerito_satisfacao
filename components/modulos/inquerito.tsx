@@ -95,9 +95,9 @@ export default function Inquerito({ handleBeforeStep, handleNextStep }: Props) {
       </div>
       <div className="flex-grow p-6 space-y-6 mb-6 font-semibold overflow-auto max-w-4xl mx-auto"> {/* Definição de max-w para telas maiores */}
         {questions.slice(0, 5).map((question, index) => (
-          <div key={index} className="space-y-2 md:grid md:grid-cols-2 md:gap-4 md:items-center">
-            <p className="text-azul-escuro">{question.text}</p>
-            <div className="flex justify-center gap-4 md:mt-0 mt-4"> {/* Remove a margin-top em MD */}
+          <div key={index} className="space-y-2 md:grid md:grid-cols-2 md:items-center">
+            <span className="text-azul-escuro">{question.text}</span>
+            <div className="flex justify-center gap-4 "> {/* Remove a margin-top em MD */}
               {emojis.map((emoji, emojiIndex) => (
                 <button
                   key={emojiIndex}
@@ -142,6 +142,7 @@ export default function Inquerito({ handleBeforeStep, handleNextStep }: Props) {
           </div>
           {responses[5] === 1 && (
             <>
+            <span></span>
               <textarea
                 placeholder="Em que sentiu dificuldade?"
                 value={comments}
