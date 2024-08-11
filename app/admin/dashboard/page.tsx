@@ -1,7 +1,7 @@
-// pages/index.tsx
 "use client";
 
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { supabase } from '@/service/dbconnection';
 import BarChart from '@/components/dashboard/BarChart';
 import PieChart from '@/components/dashboard/PieChart';
@@ -36,23 +36,32 @@ interface SurveyData {
 const Dashboard: React.FC = () => {
   const [surveyData, setSurveyData] = useState<SurveyData[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
-    const loadData = async () => {
-      const { data, error } = await supabase
-        .from('tabela_inquerito')
-        .select('id, email, pergunta_01, pergunta_02, pergunta_03, pergunta_04, pergunta_05, pergunta_06, pergunta_07');
-
-      if (error) {
-        console.error('Erro ao buscar dados:', error);
+    const checkAuthAndLoadData = async () => {
+      // Verifica se o usuário está autenticado
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        // Se não estiver autenticado, redireciona para a página de login
+        router.push('/admin');
       } else {
-        setSurveyData(data || []);
+        // Carrega os dados do dashboard se autenticado
+        const { data, error } = await supabase
+          .from('tabela_inquerito')
+          .select('id, email, pergunta_01, pergunta_02, pergunta_03, pergunta_04, pergunta_05, pergunta_06, pergunta_07');
+
+        if (error) {
+          console.error('Erro ao buscar dados:', error);
+        } else {
+          setSurveyData(data || []);
+        }
+        setLoading(false);
       }
-      setLoading(false);
     };
 
-    loadData();
-  }, []);
+    checkAuthAndLoadData();
+  }, [router]);
 
   if (loading) {
     return (

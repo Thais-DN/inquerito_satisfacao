@@ -88,16 +88,16 @@ export default function Inquerito({ handleBeforeStep, handleNextStep }: Props) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col font-signika bg-gradient-to-b from-white to-purple-200 px-2">
+    <div className="min-h-screen flex flex-col font-signika bg-gradient-to-b from-white to-purple-200 px-2 md:px-0">
       <div className="flex items-center ml-2 gap-3 mt-4">
         <img src="logo-coracao.png" alt="logo coração - vitale" width={50} />
         <h1 className="text-lg font-extrabold text-azul-escuro">Inquérito de satisfação</h1>
       </div>
-      <div className="flex-grow p-6 space-y-6 mb-6 font-semibold overflow-auto">
+      <div className="flex-grow p-6 space-y-6 mb-6 font-semibold overflow-auto max-w-4xl mx-auto"> {/* Definição de max-w para telas maiores */}
         {questions.slice(0, 5).map((question, index) => (
           <div key={index} className="space-y-2 md:grid md:grid-cols-2 md:gap-4 md:items-center">
             <p className="text-azul-escuro">{question.text}</p>
-            <div className="flex justify-center gap-4">
+            <div className="flex justify-center gap-4 md:mt-0 mt-4"> {/* Remove a margin-top em MD */}
               {emojis.map((emoji, emojiIndex) => (
                 <button
                   key={emojiIndex}
@@ -154,6 +154,7 @@ export default function Inquerito({ handleBeforeStep, handleNextStep }: Props) {
             </>
           )}
         </div>
+        
 
         {/* Questão 7: Slider */}
         <div className="space-y-2 md:grid md:grid-cols-2 md:gap-4 md:items-center">
