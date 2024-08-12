@@ -1,15 +1,10 @@
+"use client"
 import { useEffect } from 'react';
 import { Globe, Mail, Phone } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { removeEmailLocalStorage } from '@/utils/handleEmailLocalStorage';
 
-// Interface for the props
-interface Props {
-  handleBeforeStep: () => void;
-  handleNextStep: () => void;
-}
-
-export default function Consulta({ handleBeforeStep, handleNextStep }: Props) {
+export default function Consulta() {
   // Trigger confetti when the component mounts
   useEffect(() => {
     // Basic confetti settings

@@ -1,16 +1,16 @@
+"use client"
+
 import React, { useState } from 'react';
-import ProgressBar from 'react-bootstrap/ProgressBar';
-import CustomizedSlider from '../Slider/Slider'; // Importa o componente Slider
 import submitForm from '@/service/submitForm';
 import convertData from '@/utils/convertData';
 import { getEmailLocalStorage } from '@/utils/handleEmailLocalStorage';
+import { useRouter } from 'next/navigation';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import CustomizedSlider from '@/components/Slider/Slider';
+import { ProgressBar } from 'react-bootstrap';
 
-interface Props {
-  handleBeforeStep: () => void;
-  handleNextStep: () => void;
-}
-
-export default function Inquerito({ handleBeforeStep, handleNextStep }: Props) {
+export default function Inquerito() {
+  const router = useRouter();
   const [responses, setResponses] = useState<Array<number | null>>(Array(questions.length).fill(null));
   const [comments, setComments] = useState<string>("");
   const [commentError, setCommentError] = useState<string>(''); // Error message state for comment validation
@@ -83,15 +83,15 @@ export default function Inquerito({ handleBeforeStep, handleNextStep }: Props) {
       const userEmail = getEmailLocalStorage();
       const data = convertData(responses, comments, userEmail);
       submitForm(data);
-      handleNextStep();
+      router.push('/pages/agradecimentos');
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col font-signika bg-gradient-to-b from-white to-purple-200 px-2 md:px-0">
       <div className="flex items-center ml-2 gap-3 mt-4">
-        <img src="logo-coracao.png" alt="logo coração - vitale" width={50} />
-        <h1 className="text-lg font-extrabold text-azul-escuro">Inquérito de satisfação</h1>
+        <img src="/logo-coracao.png" alt="logo coração - vitale" width={50} />
+      <h1 className="text-lg font-extrabold text-azul-escuro">Inquérito de satisfação</h1>
       </div>
       <div className="flex-grow p-6 space-y-6 mb-6 font-semibold overflow-auto max-w-4xl mx-auto"> {/* Definição de max-w para telas maiores */}
         {questions.slice(0, 5).map((question, index) => (
@@ -219,11 +219,11 @@ const questions = [
 
 // Lista de emojis
 const emojis = [
-  { src: 'emoji-1.png' },
-  { src: 'emoji-2.png' },
-  { src: 'emoji-3.png' },
-  { src: 'emoji-4.png' },
-  { src: 'emoji-5.png' },
+  { src: '/emoji-1.png' },
+  { src: '/emoji-2.png' },
+  { src: '/emoji-3.png' },
+  { src: '/emoji-4.png' },
+  { src: '/emoji-5.png' },
 ];
 
 // Componente da barra de progresso

@@ -25,7 +25,7 @@ const Login: React.FC = () => {
         alert("Credenciais inválidas. Por favor, tente novamente.");
       } else {
         // Redireciona para a página de dashboard
-        router.push("/admin/dashboard");
+        router.push("/pages/admin/dashboard");
       }
     } catch (error) {
       console.error("Erro na autenticação:", error);
