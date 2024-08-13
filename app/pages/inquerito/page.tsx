@@ -88,17 +88,19 @@ export default function Inquerito() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col font-signika bg-gradient-to-b from-white to-purple-200 px-2 md:px-0">
-      <div className="flex items-center ml-2 gap-3 mt-4">
+    <div className="min-h-screen flex flex-col font-signika bg-gradient-to-b from-white to-purple-200 px-2 md:px-0 lg:px-8">
+      <div className="flex items-center ml-2 gap-3 mt-4 lg:mt-6">
         <img src="/logo-coracao.png" alt="logo coração - vitale" width={50} />
-      <h1 className="text-lg font-extrabold text-azul-escuro">Inquérito de satisfação</h1>
+        <h1 className="text-lg font-extrabold text-azul-escuro lg:text-2xl">
+          Inquérito de satisfação
+        </h1>
       </div>
-      <div className="flex-grow p-6 space-y-6 mb-6 font-semibold overflow-auto max-w-4xl mx-auto"> {/* Definição de max-w para telas maiores */}
+      <div className="flex-grow p-6 space-y-6 mb-6 font-semibold overflow-auto max-w-4xl mx-auto lg:max-w-6xl lg:space-y-10">
         {questions.slice(0, 5).map((question, index) => (
-          <div key={index} className="space-y-2 md:grid md:grid-cols-2 md:items-center">
-            <span className="text-azul-escuro">{question.text}</span>
-            <div className="flex flex-col items-center"> {/* Adiciona flex-col e items-center para alinhar */}
-              <div className="flex justify-center gap-4">
+          <div key={index} className="space-y-2 md:grid md:grid-cols-2 md:items-center lg:space-y-0 lg:grid-cols-2 lg:gap-6">
+            <span className="text-azul-escuro lg:text-lg">{question.text}</span>
+            <div className="flex flex-col items-center lg:items-center"> {/* Centraliza os emojis */}
+              <div className="flex justify-center gap-4 lg:gap-6">
                 {emojis.map((emoji, emojiIndex) => (
                   <button
                     key={emojiIndex}
@@ -118,22 +120,22 @@ export default function Inquerito() {
                   </button>
                 ))}
               </div>
-              <div className="flex justify-between w-full mt-2 px-4 md:hidden"> {/* Espaça os textos, escondidos em telas MD+ */}
+              <div className="flex justify-between w-full mt-2 px-4 md:hidden lg:hidden"> {/* Oculta os textos em lg */}
                 <span className="text-xs text-gray-500">Muito ruim</span>
                 <span className="text-xs text-gray-500">Muito bom</span>
               </div>
             </div>
           </div>
         ))}
-
+  
         {/* Questão 6: Sim ou Não */}
-        <div className="space-y-2 md:grid md:grid-cols-2 md:gap-4 md:items-center">
-          <p className="text-azul-escuro">{questions[5].text}</p>
-          <div className="flex justify-center gap-4">
+        <div className="space-y-2 md:grid md:grid-cols-2 md:gap-4 md:items-center lg:gap-6">
+          <p className="text-azul-escuro lg:text-lg">{questions[5].text}</p>
+          <div className="flex justify-center gap-4 lg:gap-6">
             <button
               className={`px-4 py-2 focus:outline-none shadow-md rounded-md ${
                 responses[5] === 1 ? 'bg-azul-agua text-white' : 'bg-white text-black'
-              }`}
+              } lg:px-6 lg:py-3`}
               onClick={() => handleYesNoClick(1)}
             >
               Sim
@@ -141,7 +143,7 @@ export default function Inquerito() {
             <button
               className={`px-4 py-2 focus:outline-none shadow-md rounded-md ${
                 responses[5] === 2 ? 'bg-azul-agua text-white' : 'bg-white text-black'
-              }`}
+              } lg:px-6 lg:py-3`}
               onClick={() => handleYesNoClick(2)}
             >
               Não
@@ -155,37 +157,37 @@ export default function Inquerito() {
                 value={comments}
                 onChange={handleCommentChange}
                 onBlur={handleCommentBlur}
-                className="mt-4 p-2 w-full border shadow-md focus:outline-none text-azul-escuro text-sm rounded-md resize-none"
+                className="mt-4 p-2 w-full border shadow-md focus:outline-none text-azul-escuro text-sm rounded-md resize-none lg:text-base lg:p-4"
                 rows={3}
               />
-              {commentError && <p className="text-red-500 text-sm">{commentError}</p>}
+              {commentError && <p className="text-red-500 text-sm lg:text-base">{commentError}</p>}
             </>
           )}
         </div>
-
+  
         {/* Questão 7: Slider */}
-        <div className="space-y-2 md:grid md:grid-cols-2 md:gap-4 md:items-center">
-          <p className="text-azul-escuro ">{questions[6].text}</p>
+        <div className="space-y-2 md:grid md:grid-cols-2 md:gap-4 md:items-center lg:gap-6">
+          <p className="text-azul-escuro lg:text-lg">{questions[6].text}</p>
           <CustomizedSlider
             defaultValue={responses[6] !== null ? responses[6] : 50}
             onChange={(value) => handleEmojiClick(6, value)}
           />
         </div>
       </div>
-      <div className="w-full fixed bottom-0 left-0 p-2 bg-azul-escuro rounded-t-lg">
-        <div className="flex items-center gap-2">
+      <div className="w-full fixed bottom-0 left-0 p-2 bg-azul-escuro rounded-t-lg lg:p-4">
+        <div className="flex items-center gap-2 lg:gap-4">
           <BarraProgresso progress={calculateProgress()} />
           <button
             onClick={handleSubmit}
             type="submit"
-            className={`px-6 py-2 bg-azul text-white rounded-full shadow-md`}
+            className={`px-6 py-2 bg-azul text-white rounded-full shadow-md lg:px-8 lg:py-3`}
           >
             Avançar
           </button>
         </div>
       </div>
     </div>
-  );
+  );    
 }
 
 // Função para retornar o placeholder adequado para cada emoji

@@ -74,7 +74,7 @@ function Credenciais() {
 
       {/* Footer centralizado e com tamanho máximo */}
       <div className="w-full bg-azul text-white mt-10">
-        <div className="flex items-center justify-between pt-3 px-4 max-w-screen-xl mx-auto">
+        <div className="flex items-center justify-between pt-3 px-4 max-w-screen-xl mx-auto md:justify-center md:gap-56 lg:gap-96">
           <div className="flex flex-col">
             <div className="mb-2">
               <a
