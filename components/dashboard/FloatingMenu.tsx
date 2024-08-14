@@ -1,5 +1,8 @@
+"use client"
+
 import React, { useState, useEffect } from 'react';
 import { LineChart, User, MessageSquare } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const FloatingMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,12 +11,14 @@ const FloatingMenu: React.FC = () => {
   const [lastPosition, setLastPosition] = useState({ x: 0, y: 0 });
   const [isClick, setIsClick] = useState(true);
 
+  const router = useRouter(); // Hook para navegação
+
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e.preventDefault(); // Previne comportamento padrão do mouse
+    e.preventDefault();
     setIsDragging(true);
     setLastPosition({ x: e.clientX - position.x, y: e.clientY - position.y });
     setIsClick(true);
-    document.body.style.userSelect = 'none'; // Desabilita a seleção de texto
+    document.body.style.userSelect = 'none';
   };
 
   const handleMouseMove = (e: MouseEvent) => {
@@ -39,7 +44,7 @@ const FloatingMenu: React.FC = () => {
 
   const handleMouseUp = () => {
     setIsDragging(false);
-    document.body.style.userSelect = ''; // Reabilita a seleção de texto
+    document.body.style.userSelect = '';
     if (isClick) {
       setIsOpen(!isOpen);
     }
@@ -71,9 +76,14 @@ const FloatingMenu: React.FC = () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
       window.removeEventListener('mousedown', handleClickOutside);
-      document.body.style.userSelect = ''; // Garante que a seleção seja habilitada novamente
+      document.body.style.userSelect = '';
     };
   }, [isDragging, isOpen]);
+
+  // Função de navegação
+  const handleNavigation = (path: string) => {
+    router.push(path);
+  };
 
   return (
     <div>
@@ -84,21 +94,28 @@ const FloatingMenu: React.FC = () => {
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
       >
-        <div
-          className="bg-blue-600/50 rounded-full w-16 h-16 flex items-center justify-center cursor-pointer"
-        >
+        <div className="bg-blue-600/50 rounded-full w-12 h-12 flex items-center justify-center cursor-pointer">
           <span className="text-white text-2xl">≡</span> {/* Ícone de menu */}
         </div>
 
         {isOpen && (
-          <div className="absolute flex flex-col items-center space-y-4 mt-4"> {/* Um abaixo do outro */}
-            <div className="bg-blue-600/50 rounded-full w-14 h-14 flex items-center justify-center cursor-pointer">
+          <div className="absolute flex flex-col items-center space-y-4 mt-4">
+            <div
+              className="bg-blue-600/50 rounded-full w-14 h-14 flex items-center justify-center cursor-pointer"
+              onClick={() => handleNavigation('/pages/dashboard/page')} // Caminho para a página do gráfico de linha
+            >
               <LineChart className="text-white w-8 h-8" /> {/* Ícone de gráfico de linha */}
             </div>
-            <div className="bg-blue-600/50 rounded-full w-14 h-14 flex items-center justify-center cursor-pointer">
+            <div
+              className="bg-blue-600/50 rounded-full w-14 h-14 flex items-center justify-center cursor-pointer"
+              onClick={() => handleNavigation('/pages/admin/client')} // Caminho para a página do cliente
+            >
               <User className="text-white w-8 h-8" /> {/* Ícone de usuário */}
             </div>
-            <div className="bg-blue-600/50 rounded-full w-14 h-14 flex items-center justify-center cursor-pointer">
+            <div
+              className="bg-blue-600/50 rounded-full w-14 h-14 flex items-center justify-center cursor-pointer"
+              onClick={() => handleNavigation('/pages/comments/comments')} // Caminho para a página de comentários
+            >
               <MessageSquare className="text-white w-8 h-8" /> {/* Ícone de comentário */}
             </div>
           </div>

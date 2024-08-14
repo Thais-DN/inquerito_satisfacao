@@ -14,11 +14,14 @@ const PieChart: React.FC<PieChartProps> = ({ yesPercentage, noPercentage }) => {
     datasets: [
       {
         data: [yesPercentage, noPercentage],
-        backgroundColor: ['#4e8baa', '#d3aef4'],
-        hoverBackgroundColor: ['#4e8baa', '#d3aef4'],
+        backgroundColor: ['#1E90FF', '#ADD8E6'], // Azul mais escuro e azul claro
+        hoverBackgroundColor: ['#4682B4', '#B0E0E6'], // Azul com um tom metálico e azul pálido
+        borderColor: ['#104E8B', '#87CEFA'], // Bordas com azul ainda mais escuro e azul claro brilhante
+        borderWidth: 5, // Define a largura da borda para 2px
       },
     ],
   };
+  
 
   const pieChartOptions: ChartOptions<'pie'> = {
     responsive: true,

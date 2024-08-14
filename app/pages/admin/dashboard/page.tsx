@@ -158,12 +158,19 @@ const Dashboard: React.FC = () => {
               <BarChart data={averageScores} />
             </div>
   
-            <div className='w-1/2 p-6 flex flex-col justify-around '>
-              {DashQuestions.map((item, idx) => {
-                return (
-                  <Question color={item.color} text={item.question} key={idx} />
-                )
-              })}
+            <div className='w-1/2 p-6 flex flex-col justify-around'>
+              {DashQuestions.map((item, idx) => (
+                <Question color={item.color} text={item.question} key={idx} />
+              ))}
+            </div>
+          </div>
+
+          {/* Seção dos gráficos PieChart e LineChart */}
+          <div className="w-full flex mt-8 gap-8">
+            <div className="w-1/2 p-4 px-2 bg-white rounded-lg shadow-lg">
+              <PieChart yesPercentage={yesPercentage} noPercentage={noPercentage} />
+            </div>
+            <div className="w-1/2 p-4 px-2 bg-white rounded-lg shadow-lg">
             </div>
           </div>
         </div>
@@ -171,8 +178,7 @@ const Dashboard: React.FC = () => {
       </div>
     </div>
   );
-}
-
+};
 
 // Utility functions
 const calculateAverageScores = (data: SurveyData[]) => {
