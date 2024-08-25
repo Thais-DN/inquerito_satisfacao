@@ -140,7 +140,7 @@ export default function Inquerito() {
                 className='w-full !pr-20 py-2 rounded-md shadow-md !focus:outline-none'
                 onChange={(e) => handleEmojiClick(4, Number(e.target.value))} // Assegura que a resposta seja registrada
               >
-                <option value="">Selecione</option>
+                <option value="" selected disabled>Selecione</option>
                 <option value="1">Facebook</option>
                 <option value="2">Instagram</option>
                 <option value="3">Google</option>
