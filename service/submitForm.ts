@@ -7,18 +7,17 @@ export type DataProps = {
     pergunta_03: number | null;
     pergunta_04: number | null;
     pergunta_05: number | null;
-    pergunta_06: number | null;
-    observacao_06: string;
-    pergunta_07: number | null;
+    observacao?: string;
 }
 
 async function submitForm(data: DataProps) {
     const { data:response, error } = await supabase
-        .from('tabela_inquerito')
+        .from('tabela_inquerito_v2')
         .insert([
             data,
         ])
         .select()
+        console.log(response, error, data)
 }
 
 export default submitForm

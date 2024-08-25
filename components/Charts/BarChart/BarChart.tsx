@@ -1,7 +1,25 @@
-// components/BarChart.tsx
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
-import { ChartOptions } from 'chart.js';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ChartOptions,
+} from 'chart.js';
+
+// Registrar as escalas e outros componentes do Chart.js
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 interface BarChartProps {
   data: number[];
@@ -9,12 +27,12 @@ interface BarChartProps {
 
 const BarChart: React.FC<BarChartProps> = ({ data }) => {
   const barChartData = {
-    labels: ['Pergunta 01', 'Pergunta 02', 'Pergunta 03', 'Pergunta 04', 'Pergunta 05'],
+    labels: ['Administrativo', 'Médicos', 'Geral'],
     datasets: [
       {
         label: 'Satisfação do Usuário',
         data,
-        backgroundColor: ['#363b56', '#4e8baa', '#0fa5ab', '#c8a2c8', '#d3aef4'],
+        backgroundColor: ['#363b56', '#4e8baa', '#0fa5ab'],
         borderWidth: 1,
       },
     ],

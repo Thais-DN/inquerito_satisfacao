@@ -1,6 +1,6 @@
 import { DataProps } from "@/service/submitForm"
 
-function convertData(responses:Array<number | null>, comments:string, userEmail:string | null) {
+function convertData(responses:Array<number | null>, comments:string, userEmail:string | null, observacao: string | undefined) {
 
     var data: DataProps = {
         email: userEmail,
@@ -9,9 +9,7 @@ function convertData(responses:Array<number | null>, comments:string, userEmail:
         pergunta_03: responses[2],
         pergunta_04: responses[3],
         pergunta_05: responses[4],
-        pergunta_06: responses[5],
-        observacao_06: comments,
-        pergunta_07: responses[6]
+        observacao: observacao,
     }
 
     return data

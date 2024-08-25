@@ -2,21 +2,43 @@
 
 import { LineChart, MessageSquare, User } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const FloatingMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter(); // Hook para navegação
+  const menuRef = useRef<HTMLDivElement>(null); // Referência ao menu
 
   const handleClick = (path: string) => {
     console.log(`Icon Clicked - Navigating to ${path}`);
     router.push(path);
+    setIsOpen(false); // Fecha o menu ao clicar em um item
   };
+
+  // Fecha o menu ao clicar fora dele
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
 
   return (
     <div>
       {isOpen && <div className="fixed inset-0 bg-black opacity-50 z-40"></div>}
       <div
+        ref={menuRef}
         className="fixed z-50 menu-button"
         style={{ top: 20, left: 20 }}
         onClick={() => setIsOpen(!isOpen)}
