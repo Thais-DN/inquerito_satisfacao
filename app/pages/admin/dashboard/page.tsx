@@ -8,6 +8,7 @@ import Navbar from '@/components/DashNav/Navbar';
 import FloatingMenu from '@/components/dashboard/FloatingMenu';
 import Card from '@/components/Charts/Card';
 import BarChart from '@/components/Charts/BarChart/BarChart';
+import PieChart from '@/components/dashboard/PieChart';
 
 interface SurveyData {
   id: number;
@@ -16,7 +17,7 @@ interface SurveyData {
   pergunta_02: string;
   pergunta_03: string;
   pergunta_04: string;
-  pergunta_05: string;
+  pergunta_05: string;  // Select options
   observacao?: string;
 }
 
@@ -85,17 +86,22 @@ const Dashboard: React.FC = () => {
     const avg3 = sumArr(media3) / data.length;
   
     // Convertendo a média para porcentagem
-
     return [avg1, avg2, avg3]
   }
-  // Função para converter a nota (1-5) em porcentagem (0-100%)
-
 
   const averageScore = convertToPercentage(sumArr(calculateAverage(surveyData)) / 3);
 
+  // Cálculo das respostas da pergunta 5 para o gráfico de pizza
+  const calculatePieChartData = (data: SurveyData[]) => {
+    const options = ["Facebook", "Instagram", "Google", "Nosso site", "Panfleto", "Outros"];
+    const counts = options.map(option => ({
+      label: option,
+      value: data.filter(d => d.pergunta_05 === option).length,
+    }));
+    return counts;
+  };
 
-  console.log(averageScore)
-
+  const pieChartData = calculatePieChartData(surveyData);
 
   // Calcular percentuais de promotores e detratores
   const promotersCount = surveyData.filter(data => data.pergunta_04 == "1").length;
@@ -147,6 +153,11 @@ const Dashboard: React.FC = () => {
                 </li>
               </ul>
             </div>
+          </div>
+
+          {/* Seção do Gráfico de Pizza */}
+          <div className='w-full bg-white rounded-lg shadow-lg mt-5'>
+            <PieChart data={pieChartData} title="Como você encontrou nossos serviços?" />
           </div>
         </div>
         <FloatingMenu />
