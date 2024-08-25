@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '@/service/dbconnection';
 import GaugeChartCustom from '@/components/Charts/GaugeChart';
 import Navbar from '@/components/DashNav/Navbar';
-import FloatingMenu from '@/components/dashboard/FloatingMenu';
 import Card from '@/components/Charts/Card';
 import BarChart from '@/components/Charts/BarChart/BarChart';
 import PieChart from '@/components/dashboard/PieChart';
@@ -36,14 +35,14 @@ const Dashboard: React.FC = () => {
     const checkAuthAndLoadData = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        router.push('/admin');
+        router.push('/pages/admin'); // Redireciona para a página de login se não houver sessão
       } else {
         setEmail(session.user.email || null);
-
+  
         const { data, error } = await supabase
           .from('tabela_inquerito_v2')
           .select('*');
-
+  
         if (error) {
           console.error('Erro ao buscar dados:', error);
         } else {
@@ -52,9 +51,10 @@ const Dashboard: React.FC = () => {
         setLoading(false);
       }
     };
-
+  
     checkAuthAndLoadData();
   }, [router]);
+  
 
   if (loading) {
     return (
@@ -340,10 +340,6 @@ const Dashboard: React.FC = () => {
 
           
         </div>
-        
-
-
-        <FloatingMenu />
       </div>
     </div>
     
