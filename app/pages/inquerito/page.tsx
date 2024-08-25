@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState } from 'react';
 import submitForm from '@/service/submitForm';
@@ -6,14 +6,18 @@ import convertData from '@/utils/convertData';
 import { getEmailLocalStorage } from '@/utils/handleEmailLocalStorage';
 import { useRouter } from 'next/navigation';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import CustomizedSlider from '@/components/Slider/Slider';
-import { ProgressBar } from 'react-bootstrap';
+import { Form, ProgressBar, Modal } from 'react-bootstrap';
 
 export default function Inquerito() {
   const router = useRouter();
   const [responses, setResponses] = useState<Array<number | null>>(Array(questions.length).fill(null));
-  const [comments, setComments] = useState<string>("");
-  const [commentError, setCommentError] = useState<string>(''); // Error message state for comment validation
+  const [comments, setComments] = useState<string>(""); 
+  const [observacao, setObservacao] = useState<string>(""); 
+  const [commentError, setCommentError] = useState<string>('');
+  const [showModal, setShowModal] = useState(false); // Estado para controlar o modal
+
+  // Função para abrir e fechar o modal
+  const handleModal = () => setShowModal(!showModal);
 
   // Manipula a mudança no slider ou nos botões de emoji
   const handleEmojiClick = (questionIndex: number, value: number) => {
@@ -22,57 +26,17 @@ export default function Inquerito() {
     setResponses(newResponses);
   };
 
-  // Manipula a mudança na resposta sim/não para a questão 6
-  const handleYesNoClick = (value: number) => {
+  // Manipula a mudança na resposta sim/não para as questões 3 e 4
+  const handleYesNoClick = (value: number, responseNumber: number) => {
     const newResponses = [...responses];
-    newResponses[5] = value;
+    newResponses[responseNumber] = value;
     setResponses(newResponses);
 
-    // Limpa o comentário se "Não" for selecionado
-    if (value === 2) {
+    // Limpa o comentário se "Não" for selecionado na questão 4
+    if (responseNumber === 3 && value === 2) {
       setComments("");
-      setCommentError(''); // Reset comment error
+      setCommentError(''); 
     }
-  };
-
-  // Manipula a mudança de texto para a questão 6
-  const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setComments(e.target.value);
-
-    // Remove error message if comment is valid
-    if (e.target.value.trim().length >= 15) {
-      setCommentError('');
-    }
-  };
-
-  // Verifica se o comentário tem pelo menos 15 caracteres ao sair do campo
-  const handleCommentBlur = () => {
-    if (comments.trim().length < 15 && responses[5] === 1) {
-      setCommentError('O comentário deve ter pelo menos 15 caracteres.');
-    } else {
-      setCommentError('');
-    }
-  };
-
-  // Calcula o progresso das respostas
-  const calculateProgress = () => {
-    const answered = responses.filter((response, index) => {
-      if (index === 5) {
-        return response !== null && (response === 2 || (response === 1 && comments.trim().length >= 15));
-      }
-      return response !== null;
-    }).length;
-    return (answered / questions.length) * 100;
-  };
-
-  // Verifica se todas as questões foram respondidas
-  const allQuestionsAnswered = () => {
-    return responses.every((response, index) => {
-      if (index === 5) {
-        return response !== null && (response === 2 || (response === 1 && comments.trim().length >= 15));
-      }
-      return response !== null;
-    });
   };
 
   const handleSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -81,10 +45,21 @@ export default function Inquerito() {
       alert("Existem perguntas ainda não respondidas.");
     } else {
       const userEmail = getEmailLocalStorage();
-      const data = convertData(responses, comments, userEmail);
+      const data = convertData(responses, comments, userEmail, observacao);
       submitForm(data);
       router.push('/pages/agradecimentos');
     }
+  };
+
+  // Calcula o progresso das respostas
+  const calculateProgress = () => {
+    const answered = responses.filter((response) => response !== null).length;
+    return (answered / questions.length) * 100;
+  };
+
+  // Verifica se todas as questões foram respondidas
+  const allQuestionsAnswered = () => {
+    return responses.every((response) => response !== null);
   };
 
   return (
@@ -95,11 +70,20 @@ export default function Inquerito() {
           Inquérito de satisfação
         </h1>
       </div>
-      <div className="flex-grow p-6 space-y-6 mb-6 font-semibold overflow-auto max-w-4xl mx-auto lg:max-w-6xl lg:space-y-10">
-        {questions.slice(0, 5).map((question, index) => (
+
+      {/* Card para desktop */}
+      <div className="flex-grow p-6 space-y-6 mb-6 font-semibold overflow-auto max-w-4xl mx-auto lg:max-w-6xl lg:space-y-10 lg:from-white lg:to-purple-200 lg:rounded-lg lg:shadow-lg lg:p-8 lg:mb-32">
+        {questions.slice(0, 3).map((question, index) => (
           <div key={index} className="space-y-2 md:grid md:grid-cols-2 md:items-center lg:space-y-0 lg:grid-cols-2 lg:gap-6">
-            <span className="text-azul-escuro lg:text-lg">{question.text}</span>
-            <div className="flex flex-col items-center lg:items-center"> {/* Centraliza os emojis */}
+            <div className="flex items-center gap-2">
+              <span className="text-azul-escuro lg:text-lg">{question.text}</span>
+              <span 
+                onClick={handleModal} 
+                className="cursor-pointer text-azul-escuro bg-slate-200 rounded-full p-3 w-6 h-6 flex items-center justify-center">
+                !
+              </span>
+            </div>
+            <div className="flex flex-col items-center lg:items-center">
               <div className="flex justify-center gap-4 lg:gap-6">
                 {emojis.map((emoji, emojiIndex) => (
                   <button
@@ -108,79 +92,104 @@ export default function Inquerito() {
                       responses[index] === emojiIndex + 1 ? '' : ''
                     }`}
                     onClick={() => handleEmojiClick(index, emojiIndex + 1)}
-                    title={getEmojiTitle(emojiIndex + 1)} // Placeholder nos emojis
+                    title={getEmojiTitle(emojiIndex + 1)}
                   >
                     <img
                       src={emoji.src}
                       alt={`emoji-${emojiIndex + 1}`}
                       className={`w-8 h-8 shadow-md rounded-full ${
                         responses[index] !== null && responses[index] !== emojiIndex + 1 ? 'grayscale' : ''
-                      }`} // Aplica filtro grayscale aos emojis não selecionados
+                      }`}
                     />
                   </button>
                 ))}
               </div>
-              <div className="flex justify-between w-full mt-2 px-4 md:hidden lg:hidden"> {/* Oculta os textos em lg */}
-                <span className="text-xs text-gray-500">Muito ruim</span>
-                <span className="text-xs text-gray-500">Muito bom</span>
-              </div>
             </div>
           </div>
         ))}
-  
-        {/* Questão 6: Sim ou Não */}
+
+        {/* Questão 4: Você recomendaria nossos serviços para outras pessoas? */}
         <div className="space-y-2 md:grid md:grid-cols-2 md:gap-4 md:items-center lg:gap-6">
-          <p className="text-azul-escuro lg:text-lg">{questions[5].text}</p>
+          <p className="text-azul-escuro lg:text-lg">{questions[3].text}</p>
           <div className="flex justify-center gap-4 lg:gap-6">
             <button
               className={`px-4 py-2 focus:outline-none shadow-md rounded-md ${
-                responses[5] === 1 ? 'bg-azul-agua text-white' : 'bg-white text-black'
+                responses[3] === 1 ? 'bg-azul-agua text-white' : 'bg-white text-black'
               } lg:px-6 lg:py-3`}
-              onClick={() => handleYesNoClick(1)}
+              onClick={() => handleYesNoClick(1, 3)}
             >
               Sim
             </button>
             <button
               className={`px-4 py-2 focus:outline-none shadow-md rounded-md ${
-                responses[5] === 2 ? 'bg-azul-agua text-white' : 'bg-white text-black'
+                responses[3] === 2 ? 'bg-azul-agua text-white' : 'bg-white text-black'
               } lg:px-6 lg:py-3`}
-              onClick={() => handleYesNoClick(2)}
+              onClick={() => handleYesNoClick(2, 3)}
             >
               Não
             </button>
           </div>
-          {responses[5] === 1 && (
-            <>
-            <span></span>
-              <textarea
-                placeholder="Em que sentiu dificuldade?"
-                value={comments}
-                onChange={handleCommentChange}
-                onBlur={handleCommentBlur}
-                className="mt-4 p-2 w-full border shadow-md focus:outline-none text-azul-escuro text-sm rounded-md resize-none lg:text-base lg:p-4"
-                rows={3}
-              />
-              {commentError && <p className="text-red-500 text-sm lg:text-base">{commentError}</p>}
-            </>
-          )}
+        </div>
+
+        {/* Questão 5: Como você encontrou nossos serviços? */}
+        <div className="space-y-2 md:grid md:grid-cols-2 md:items-center lg:space-y-0 lg:grid-cols-2 lg:gap-6">
+          <span className="text-azul-escuro lg:text-lg">{questions[4].text}</span>
+          <div className="flex flex-col items-center lg:items-center">
+            <div>
+              <Form.Select
+                className='w-full !pr-20 py-2 rounded-md shadow-md !focus:outline-none'
+                onChange={(e) => handleEmojiClick(4, Number(e.target.value))} // Assegura que a resposta seja registrada
+              >
+                <option value="">Selecione</option>
+                <option value="1">Facebook</option>
+                <option value="2">Instagram</option>
+                <option value="3">Google</option>
+                <option value="4">Nosso site</option>
+                <option value="5">Panfleto</option>
+                <option value="6">Outros</option>
+              </Form.Select>
+            </div>
+          </div>
+        </div>
+
+        {/* 6ª Questão: Área de Observação Opcional */}
+        <div className="pb-10 lg:pb-4">
+          <p className="text-azul-escuro lg:text-lg mb-0 lg:pb-2">Deixe um comentario <span className='text-xs text-gray-500'>(opcional)</span></p>
+          <textarea
+            className="w-full p-4 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-azul-escuro"
+            rows={5}
+            placeholder="Escreva aqui"
+            value={observacao}
+            onChange={(e) => setObservacao(e.target.value)}
+          ></textarea>
         </div>
   
-        {/* Questão 7: Slider */}
-        <div className="space-y-2 md:grid md:grid-cols-2 md:gap-4 md:items-center lg:gap-6">
-          <p className="text-azul-escuro lg:text-lg">{questions[6].text}</p>
-          <CustomizedSlider
-            defaultValue={responses[6] !== null ? responses[6] : 50}
-            onChange={(value) => handleEmojiClick(6, value)}
-          />
-        </div>
       </div>
-      <div className="w-full fixed bottom-0 left-0 p-2 bg-azul-escuro rounded-t-lg lg:p-4">
+
+      {/* Modal Explicativo */}
+      <Modal show={showModal} onHide={handleModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Considerando que:</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <ul>
+            <li><strong>😟 Muito ruim:</strong> Se você está MUITO insatisfeito.</li>
+            <li><strong>😕 Ruim:</strong> Se você está insatisfeito.</li>
+            <li><strong>😐 Médio:</strong> Se você acha que o serviço foi razoável.</li>
+            <li><strong>🙂 Bom:</strong> Se você ficou satisfeito com o serviço.</li>
+            <li><strong>😃 Muito bom:</strong> Se você ficou MUITO satisfeito com o serviço.</li>
+          </ul>
+        </Modal.Body>
+      </Modal>
+
+      <div className="w-full fixed bottom-0 left-0 p-2 !bg-azul-escuro rounded-t-lg lg:p-4 ">
         <div className="flex items-center gap-2 lg:gap-4">
           <BarraProgresso progress={calculateProgress()} />
           <button
             onClick={handleSubmit}
             type="submit"
             className={`px-6 py-2 bg-azul text-white rounded-full shadow-md lg:px-8 lg:py-3`}
+            disabled={!allQuestionsAnswered()}
           >
             Avançar
           </button>
@@ -210,13 +219,11 @@ const getEmojiTitle = (index: number) => {
 
 // Lista de perguntas
 const questions = [
-  { text: '1. A equipa conseguiu resolver suas dúvidas e problemas de forma satisfatória?' },
-  { text: '2. Como você avalia as informações fornecidas antes e depois da sua consulta?' },
-  { text: '3. Qual foi o seu grau de satisfação com a minúcia do seu médico durante a utilização da telemedicina?' },
-  { text: '4. Qual o nível de facilidade em compreender as orientações dadas pelo seu médico?' },
-  { text: '5. Como você avalia sua satisfação geral com os serviços de telemedicina da Vitale?' },
-  { text: '6. Teve alguma dificuldade técnica durante a utilização da Vitale?' },
-  { text: '7. Qual é a probabilidade de escolher a Vitale para a sua próxima consulta?' },
+  { text: '1. Como você avalia a eficiência e o atendimento da nossa equipe administrativa?' },
+  { text: '2. Como você avalia a qualidade do atendimento dos nossos médicos?' },
+  { text: '3. Você está satisfeito com o serviço que recebeu em geral?' },
+  { text: '4. Você recomendaria nossos serviços para outras pessoas?' },
+  { text: '5. Como você encontrou nossos serviços?' },
 ];
 
 // Lista de emojis
