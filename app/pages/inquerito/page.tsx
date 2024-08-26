@@ -143,10 +143,13 @@ export default function Inquerito() {
                 <option value="" selected disabled>Selecione</option>
                 <option value="1">Facebook</option>
                 <option value="2">Instagram</option>
-                <option value="3">Google</option>
-                <option value="4">Nosso site</option>
-                <option value="5">Panfleto</option>
-                <option value="6">Outros</option>
+                <option value="3">LinkedIn</option>
+                <option value="4">Google</option>
+                <option value="5">Site Oficial</option>
+                <option value="6">Panfleto</option>
+                <option value="7">Indicação de amigo ou familiar</option>
+                <option value="8">Através de empresa parceira</option>
+                <option value="9">Outros</option>
               </Form.Select>
             </div>
           </div>
@@ -169,7 +172,7 @@ export default function Inquerito() {
       {/* Modal Explicativo */}
       <Modal show={showModal} onHide={handleModal} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Considerando que:</Modal.Title>
+          <Modal.Title>Considere que:</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <ul>
@@ -219,9 +222,9 @@ const getEmojiTitle = (index: number) => {
 
 // Lista de perguntas
 const questions = [
-  { text: '1. Como você avalia a eficiência e o atendimento da nossa equipe administrativa?' },
+  { text: '1. Como você avalia a eficiência e o atendimento da nossa equipa administrativa?' },
   { text: '2. Como você avalia a qualidade do atendimento dos nossos médicos?' },
-  { text: '3. Você está satisfeito com o serviço que recebeu em geral?' },
+  { text: '3. Em geral, você está satisfeito com o serviço que recebeu?' },
   { text: '4. Você recomendaria nossos serviços para outras pessoas?' },
   { text: '5. Como você encontrou nossos serviços?' },
 ];

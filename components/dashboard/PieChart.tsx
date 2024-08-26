@@ -26,13 +26,32 @@ const PieChart: React.FC<PieChartProps> = ({ data, title }) => {
     datasets: [
       {
         data: values,
-        backgroundColor: ['#1E90FF', '#ADD8E6', '#FF6384', '#36A2EB', '#FFCE56', '#8A2BE2', '#A52A2A'],
-        hoverBackgroundColor: ['#4682B4', '#B0E0E6', '#FF6384', '#36A2EB', '#FFCE56', '#7B68EE', '#B22222'],
-        borderColor: ['#104E8B', '#87CEFA', '#FF6384', '#36A2EB', '#FFCE56', '#6A5ACD', '#8B0000'],
-        borderWidth: 2,
+        backgroundColor: [
+          '#FFB6C1', // LightPink - Facebook
+          '#FFDAB9', // PeachPuff - Instagram
+          '#E6E6FA', // Lavender - LinkedIn
+          '#FFDEAD', // NavajoWhite - Google
+          '#D8BFD8', // PaleGreen - Site Oficial
+          '#AFEEEE', // PaleTurquoise - Panfleto
+          '#FFE4E1', // MistyRose - Indicação de amigo ou familiar
+          '#F5DEB3', // Wheat - Através de empresa parceira
+          '#98FB98', // Thistle - Outros
+        ],
+        hoverBackgroundColor: [
+          '#FFA07A', // LightSalmon - Facebook
+          '#FFCBA4', // Deep Peach - Instagram
+          '#D8BFD8', // Thistle - LinkedIn
+          '#FFEC8B', // Light Goldenrod - Google
+          '#E0B0FF', // LightGreen - Site Oficial
+          '#B0E0E6', // PowderBlue - Panfleto
+          '#FFDAB9', // PeachPuff - Indicação de amigo ou familiar
+          '#FFE4B5', // Moccasin - Através de empresa parceira
+          '#90EE90', // Mauve - Outros
+        ],
       },
     ],
   };
+
 
   const pieChartOptions: ChartOptions<'pie'> = {
     responsive: true,

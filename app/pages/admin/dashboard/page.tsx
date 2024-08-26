@@ -33,27 +33,29 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     const checkAuthAndLoadData = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        router.push('/pages/admin'); // Redireciona para a página de login se não houver sessão
-      } else {
-        setEmail(session.user.email || null);
-  
-        const { data, error } = await supabase
-          .from('tabela_inquerito_v2')
-          .select('*');
-  
-        if (error) {
-          console.error('Erro ao buscar dados:', error);
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+            router.push('/pages/admin'); // Redireciona para a página de login se não houver sessão
         } else {
-          setSurveyData(data || []);
+            setEmail(session.user.email || null);
+
+            const { data, error } = await supabase
+                .from('tabela_inquerito_v2')
+                .select('*')
+                .order('created_at', { ascending: false }); // Ordena os dados por data
+
+            if (error) {
+                console.error('Erro ao buscar dados:', error);
+            } else {
+                setSurveyData(data || []);
+            }
+            setLoading(false);
         }
-        setLoading(false);
-      }
     };
-  
+
     checkAuthAndLoadData();
-  }, [router]);
+}, [router]);
+
   
 
   if (loading) {
@@ -93,20 +95,27 @@ const Dashboard: React.FC = () => {
   const averageScore = convertToPercentage(sumArr(calculateAverage(surveyData)) / 3);
 
   const calculatePieChartData = (data: SurveyData[]) => {
-    const options_names = ["Facebook", "Instagram", "Google", "Nosso site", "Panfleto", "Outros"];
+    const options_names = [
+        "Facebook", 
+        "Instagram", 
+        "LinkedIn", 
+        "Google", 
+        "Site Oficial", 
+        "Panfleto", 
+        "Indicação de amigo ou familiar", 
+        "Através de empresa parceira", 
+        "Outros"
+    ];
     
-    // Array para contar as ocorrências de cada opção
     const resultCounts = Array(options_names.length).fill(0);
 
-    // Itera sobre os dados e incrementa a contagem com base na pergunta_05
     data.forEach((survey) => {
-        const answerIndex = parseInt(survey.pergunta_05) - 1; // Subtrai 1 para obter o índice correto no array
+        const answerIndex = parseInt(survey.pergunta_05) - 1; 
         if (answerIndex >= 0 && answerIndex < options_names.length) {
             resultCounts[answerIndex] += 1;
         }
     });
 
-    // Monta o array de objetos para o gráfico
     const chartData = options_names.map((option, index) => ({
         label: option,
         value: resultCounts[index],
@@ -137,22 +146,28 @@ const Dashboard: React.FC = () => {
 
   const translateContactMethod = (value: string) => {
     switch (value) {
-      case '1':
-        return 'Facebook';
-      case '2':
-        return 'Instagram';
-      case '3':
-        return 'Google';
-      case '4':
-        return 'Nosso site';
-      case '5':
-        return 'Panfleto';
-      case '6':
-        return 'Outros';
-      default:
-        return 'N/A';
+        case '1':
+            return 'Facebook';
+        case '2':
+            return 'Instagram';
+        case '3':
+            return 'LinkedIn';
+        case '4':
+            return 'Google';
+        case '5':
+            return 'Site Oficial';
+        case '6':
+            return 'Panfleto';
+        case '7':
+            return 'Indicação de amigo ou familiar';
+        case '8':
+            return 'Através de empresa parceira';
+        case '9':
+            return 'Outros';
+        default:
+            return 'N/A';
     }
-  };
+};
 
   const openSurveyModal = (survey: SurveyData) => {
     setSelectedSurvey(survey);
@@ -181,7 +196,8 @@ const Dashboard: React.FC = () => {
     ));
   };
 
-  const filteredData = surveyData.filter(data => {
+  const filteredData = surveyData
+  .filter(data => {
     const userAverage = calculateUserAverage(data);
     const promoterDetractor = Number(data.pergunta_04) === 1 ? 'Promotor' : 'Detrator';
     
@@ -192,7 +208,9 @@ const Dashboard: React.FC = () => {
       userAverage.toString().includes(searchTerm) ||
       promoterDetractor.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  });
+  })
+  .sort((a, b) => dayjs(b.created_at).unix() - dayjs(a.created_at).unix()); // Ordena por data, do mais recente para o mais antigo
+
 
   return (
     <div className="min-h-screen bg-blue-50 !font-signika">
@@ -202,7 +220,7 @@ const Dashboard: React.FC = () => {
         <div className='w-full bg-white/50 rounded-lg p-8 px-12 shadow-lg mt-5'>
           <div className='flex justify-between items-center'>
             <div className='flex justify-center items-center flex-col w-1/2'>
-              <h3 className="font-semibold text-blue-600 mb-4">Média geral de satisfação</h3>
+              <h3 className="font-semibold text-azul mb-4">Média geral de satisfação</h3>
               <GaugeChartCustom normalizedValue={displayValue / 100} displayValue={displayValue} />
             </div>
             <div className='w-auto grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8'>
@@ -217,7 +235,7 @@ const Dashboard: React.FC = () => {
                 <BarChart data={calculateAverage(surveyData)} />
             </div>
             <div className='col-span-5 w-full bg-white rounded-lg shadow-lg mt-5 max-h-[500px] flex justify-center items-center p-2'>
-              <PieChart data={pieChartData} title="Como você encontrou nossos serviços?" />
+              <PieChart data={pieChartData} title="Meio de Chegada" />
             </div>
           </div>
 
@@ -251,7 +269,7 @@ const Dashboard: React.FC = () => {
                 </p>
               </div>
               <div className="space-y-2">
-                <strong>3. Você está satisfeito com o serviço que recebeu em geral?</strong>
+                <strong>3. Em geral, você está satisfeito com o serviço que recebeu?</strong>
                 <p className="flex items-center gap-2">
                   {getEmojiList(selectedSurvey.pergunta_03)}
                 </p>
@@ -280,12 +298,12 @@ const Dashboard: React.FC = () => {
         <div className='w-auto flex p-2 bg-white rounded-lg shadow-lg mt-3'>
           <table className="min-w-full bg-white rounded-lg">
             <thead>
-              <tr className="w-full bg-blue-200 rounded-lg">
+              <tr className="w-full bg-blue-200 rounded-lg ">
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                   Email
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                  Média de Satisfação
+                  Satisfação
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                   Promotor/Detrator
@@ -336,10 +354,9 @@ const Dashboard: React.FC = () => {
                 );
               })}
             </tbody>
-          </table>
-
-          
+          </table>     
         </div>
+
       </div>
     </div>
     

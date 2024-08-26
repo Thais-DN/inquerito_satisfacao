@@ -30,7 +30,7 @@ const BarChart: React.FC<BarChartProps> = ({ data }) => {
     labels: ['Administrativo', 'Médicos', 'Geral'],
     datasets: [
       {
-        label: 'Satisfação do Usuário',
+        label: '',
         data,
         backgroundColor: ['#363b56', '#4e8baa', '#0fa5ab'],
         borderWidth: 1,
@@ -47,7 +47,7 @@ const BarChart: React.FC<BarChartProps> = ({ data }) => {
       },
       title: {
         display: true,
-        text: 'Média de Satisfação por Pergunta',
+        text: 'Satisfação por pergunta',
       },
     },
     scales: {
