@@ -10,6 +10,7 @@ import BarChart from '@/components/Charts/BarChart/BarChart';
 import PieChart from '@/components/dashboard/PieChart';
 import dayjs from 'dayjs';
 import CustomModal from '@/components/Modal/CustomModal';
+import { MessageSquareMore } from 'lucide-react';
 
 interface SurveyData {
   id: number;
@@ -320,40 +321,44 @@ const Dashboard: React.FC = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {filteredData.map((data) => {
-                const userAverage = calculateUserAverage(data);
-                const promoterDetractor = Number(data.pergunta_04) === 1 ? 'Promotor' : 'Detrator';
-                const formattedDate = dayjs(data.created_at).format('DD/MM/YYYY');
+  {filteredData.map((data) => {
+    const userAverage = calculateUserAverage(data);
+    const promoterDetractor = Number(data.pergunta_04) === 1 ? 'Promotor' : 'Detrator';
+    const formattedDate = dayjs(data.created_at).format('DD/MM/YYYY');
 
-                return (
-                  <tr key={data.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {data.email}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {Math.round(userAverage)}%
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {promoterDetractor}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {translateContactMethod(data.pergunta_05)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formattedDate}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <button
-                        onClick={() => openSurveyModal(data)}
-                        className="text-blue-600 hover:underline"
-                      >
-                        Ver inquérito
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
+    return (
+      <tr key={data.id}>
+        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+          {data.email}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          {Math.round(userAverage)}%
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          {promoterDetractor}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          {translateContactMethod(data.pergunta_05)}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          {formattedDate}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          <button
+            onClick={() => openSurveyModal(data)}
+            className="text-blue-600 hover:underline flex items-center"
+          >
+            Ver inquérito
+            {data.observacao && (
+              <MessageSquareMore className="ml-2 h-4 w-4 text-gray-500" />
+            )}
+          </button>
+        </td>
+      </tr>
+    );
+  })}
+</tbody>
+
           </table>     
         </div>
 
