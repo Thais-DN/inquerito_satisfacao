@@ -1,5 +1,6 @@
 import { User } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
+import { supabase } from '@/service/dbconnection'; // Certifique-se de que o caminho esteja correto
 
 interface NavbarProps {
   userEmail: string;
@@ -32,35 +33,52 @@ function Navbar({ userEmail }: NavbarProps) {
       });
   };
 
-  const handleChangePassword = () => {
+  const handleChangePassword = async () => {
     if (newPassword !== confirmNewPassword) {
       alert("As novas senhas não correspondem!");
       return;
     }
-
-    fetch('/auth/change-password', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        currentPassword,
-        newPassword,
-      }),
-    })
-      .then(response => {
-        if (response.ok) {
-          alert("Senha alterada com sucesso!");
-          setIsModalOpen(false);
-        } else {
-          alert("Erro ao alterar senha.");
-        }
-      })
-      .catch(error => {
-        console.error('Erro ao alterar senha:', error);
+  
+    try {
+      // Primeiro, tentar fazer login novamente para verificar a senha atual
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: userEmail,
+        password: currentPassword,
+      });
+  
+      if (signInError) {
+        alert("Senha atual inválida!");
+        return;
+      }
+  
+      // Se o login foi bem-sucedido, altere a senha
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: newPassword,
+      });
+  
+      if (updateError) {
         alert("Erro ao alterar senha.");
-      });    
+      } else {
+        // Limpar os campos de entrada
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmNewPassword('');
+  
+        // Fechar o modal
+        setIsModalOpen(false);
+  
+        // Exibir a mensagem de sucesso após o modal ser fechado
+        setTimeout(() => {
+          alert("Senha alterada com sucesso!");
+        }, 100); // Pequeno delay para garantir que o modal seja fechado antes de exibir o alerta
+      }
+    } catch (error) {
+      console.error('Erro ao alterar senha:', error);
+      alert("Erro ao alterar senha.");
+    }    
   };
+  
+  
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -105,12 +123,12 @@ function Navbar({ userEmail }: NavbarProps) {
               >
                 Logout
               </button>
-              {/* <button
+              <button
                 onClick={() => setIsModalOpen(true)}
                 className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
               >
                 Alterar Senha
-              </button> */}
+              </button>
             </div>
           )}
         </div>
