@@ -30,9 +30,9 @@ const BarChart: React.FC<BarChartProps> = ({ data }) => {
     labels: ['Administrativo', 'Médicos', 'Geral'],
     datasets: [
       {
-        label: '',
         data,
-        backgroundColor: ['#363b56', '#4e8baa', '#0fa5ab'],
+        backgroundColor: ['#AFEEEE', '#E6E6FA', '#F5DEB3'],
+        borderColor: ['#5FAF9E', '#B6B6DA', '#D3AE73'],
         borderWidth: 1,
       },
     ],
@@ -42,7 +42,7 @@ const BarChart: React.FC<BarChartProps> = ({ data }) => {
     responsive: true,
     plugins: {
       legend: {
-        display: true,
+        display: false,
         position: 'top',
       },
       title: {

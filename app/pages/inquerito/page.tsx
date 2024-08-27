@@ -176,11 +176,11 @@ export default function Inquerito() {
         </Modal.Header>
         <Modal.Body>
           <ul>
-            <li><strong>😟 Muito ruim:</strong> Se você está MUITO insatisfeito.</li>
-            <li><strong>😕 Ruim:</strong> Se você está insatisfeito.</li>
-            <li><strong>😐 Médio:</strong> Se você acha que o serviço foi razoável.</li>
-            <li><strong>🙂 Bom:</strong> Se você ficou satisfeito com o serviço.</li>
-            <li><strong>😃 Muito bom:</strong> Se você ficou MUITO satisfeito com o serviço.</li>
+            <li><strong>😟 Muito mau:</strong> Se está MUITO insatisfeito.</li>
+            <li><strong>😕 Mau:</strong> Se está insatisfeito.</li>
+            <li><strong>😐 Médio:</strong> Se acha que o serviço foi razoável.</li>
+            <li><strong>🙂 Bom:</strong> Se ficou satisfeito com o serviço.</li>
+            <li><strong>😃 Muito bom:</strong> Se ficou MUITO satisfeito com o serviço.</li>
           </ul>
         </Modal.Body>
       </Modal>
@@ -222,11 +222,11 @@ const getEmojiTitle = (index: number) => {
 
 // Lista de perguntas
 const questions = [
-  { text: '1. Como você avalia a eficiência e o atendimento da nossa equipa administrativa?' },
-  { text: '2. Como você avalia a qualidade do atendimento dos nossos médicos?' },
+  { text: '1. Como avaliaria a eficiência e o atendimento da nossa equipa administrativa?' },
+  { text: '2. Como avaliaria a qualidade do atendimento dos nossos médicos?' },
   { text: '3. Em geral, você está satisfeito com o serviço que recebeu?' },
-  { text: '4. Você recomendaria nossos serviços para outras pessoas?' },
-  { text: '5. Como você encontrou nossos serviços?' },
+  { text: '4. Recomendaria os nossos serviços para outras pessoas?' },
+  { text: '5. Como encontrou os nossos serviços?' },
 ];
 
 // Lista de emojis
